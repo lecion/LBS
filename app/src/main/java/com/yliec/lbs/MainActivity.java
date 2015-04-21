@@ -1,35 +1,30 @@
 package com.yliec.lbs;
 
+import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.amap.api.maps.AMap;
-import com.amap.api.maps.MapView;
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.MapView;
 
 
 public class MainActivity extends ActionBarActivity {
     private MapView mapView;
 
-    private AMap aMap;
+    private BaiduMap baiduMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mapView = (MapView) findViewById(R.id.map);
-        mapView.onCreate(savedInstanceState);
-        init();
-    }
+        mapView = (MapView) findViewById(R.id.bmapView);
+        baiduMap = mapView.getMap();
+        baiduMap.setMapType(BaiduMap.MAP_TYPE_SATELLITE);
+        baiduMap.setTrafficEnabled(true);
 
-    private void init() {
-        if (aMap == null) {
-            aMap = mapView.getMap();
-        }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -68,7 +63,6 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
-        mapView.onSaveInstanceState(outState);
     }
 
     @Override
@@ -76,4 +70,6 @@ public class MainActivity extends ActionBarActivity {
         super.onDestroy();
         mapView.onDestroy();
     }
+
+
 }
