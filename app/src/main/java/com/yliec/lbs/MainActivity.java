@@ -5,13 +5,19 @@ import android.os.PersistableBundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.MapStatusUpdate;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.model.LatLng;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -20,6 +26,22 @@ public class MainActivity extends ActionBarActivity {
     private BaiduMap baiduMap;
 
     private LocationClient locationClient;
+
+    /**
+     * 定位监听器
+     */
+    private MyLocationListener myLocationListener;
+
+    private MyLocationConfiguration.LocationMode currentMode = MyLocationConfiguration.LocationMode.NORMAL;
+
+    /**
+     * 是否第一次定位
+     */
+    private volatile boolean isFirstLocation = true;
+
+    private double mLatitude;
+
+    private double mLongtitude;
 
 
     @Override
@@ -30,7 +52,22 @@ public class MainActivity extends ActionBarActivity {
         baiduMap = mapView.getMap();
 //        baiduMap.setMapType(BaiduMap.MAP_TYPE_SATELLITE);
 //        baiduMap.setTrafficEnabled(true);
+        initMyLocation();
 
+    }
+
+    private void initMyLocation() {
+        locationClient = new LocationClient(this);
+        myLocationListener = new MyLocationListener();
+        locationClient.registerLocationListener(myLocationListener);
+        //对locationClient进行一些配置
+        LocationClientOption option = new LocationClientOption();
+        option.setOpenGps(true);
+        option.setCoorType("bd09II");
+        option.setIsNeedAddress(true);
+        //每隔一秒进行请求
+        option.setScanSpan(1000);
+        locationClient.setLocOption(option);
     }
 
     @Override
@@ -52,7 +89,29 @@ public class MainActivity extends ActionBarActivity {
             return true;
         }
 
+        if (id == R.id.menu_my_location) {
+            centerToMyLocation();
+        }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * 定位到我的位置
+     */
+    private void centerToMyLocation() {
+        LatLng latLng = new LatLng(mLatitude, mLongtitude);
+        MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(latLng);
+        baiduMap.animateMapStatus(msu);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        baiduMap.setMyLocationEnabled(true);
+        if (!locationClient.isStarted()) {
+            locationClient.start();
+        }
     }
 
     @Override
@@ -73,6 +132,14 @@ public class MainActivity extends ActionBarActivity {
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        //关闭定位
+        baiduMap.setMyLocationEnabled(false);
+        locationClient.stop();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
@@ -86,9 +153,16 @@ public class MainActivity extends ActionBarActivity {
                 return;
             }
             MyLocationData locationData = new MyLocationData.Builder().accuracy(bdLocation.getRadius())
-                    .direction(13f).latitude(bdLocation.getLatitude())
+                    .latitude(bdLocation.getLatitude())
                     .longitude(bdLocation.getLongitude()).build();
             baiduMap.setMyLocationData(locationData);
+            mLatitude = bdLocation.getLatitude();
+            mLongtitude = bdLocation.getLongitude();
+            if (isFirstLocation) {
+               centerToMyLocation();
+                isFirstLocation = false;
+                Toast.makeText(MainActivity.this, bdLocation.getAddrStr(), Toast.LENGTH_LONG).show();
+            }
         }
     }
 
