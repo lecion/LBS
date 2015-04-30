@@ -2,11 +2,13 @@ package com.yliec.lbs;
 
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.baidu.lbsapi.BMapManager;
+import com.baidu.lbsapi.MKGeneralListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -20,7 +22,7 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
     private MapView mapView;
 
     private BaiduMap baiduMap;
@@ -42,11 +44,19 @@ public class MainActivity extends ActionBarActivity {
     private double mLatitude;
 
     private double mLongtitude;
+    private BMapManager mBMapMan;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mBMapMan=new BMapManager(getApplication());
+        mBMapMan.init(new MKGeneralListener() {
+            @Override
+            public void onGetPermissionState(int i) {
+
+            }
+        });
         setContentView(R.layout.activity_main);
         mapView = (MapView) findViewById(R.id.bmapView);
         baiduMap = mapView.getMap();
