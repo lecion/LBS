@@ -1,8 +1,10 @@
 package com.yliec.lbs;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -19,10 +21,15 @@ import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.model.LatLng;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
+    public static final String LOCATION_LOG = "LocationLog";
     private MapView mapView;
 
     private BaiduMap baiduMap;
@@ -50,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mBMapMan=new BMapManager(getApplication());
         mBMapMan.init(new MKGeneralListener() {
             @Override
@@ -63,7 +71,38 @@ public class MainActivity extends AppCompatActivity {
 //        baiduMap.setMapType(BaiduMap.MAP_TYPE_SATELLITE);
 //        baiduMap.setTrafficEnabled(true);
         initMyLocation();
+        drawOverlay();
+    }
 
+    private void drawOverlay() {
+        List<LatLng> latLngs = new ArrayList<>();
+        PolylineOptions polylineOptions = new PolylineOptions();
+        LatLng p1 = point(106.531491,29.574657);
+        LatLng p2 = point(106.531792,29.574948);
+        LatLng p3 = point(106.532062,29.57512);
+        LatLng p4 = point(106.532596,29.575317);
+        LatLng p5 = point(106.533566,29.575458);
+        LatLng p6 = point(106.533899,29.575246);
+        LatLng p7 = point(106.534119,29.57505);
+        LatLng p8 = point(106.534375,29.574873);
+        LatLng p9 = point(106.534766,29.574881);
+        latLngs.add(p1);
+        latLngs.add(p2);
+        latLngs.add(p3);
+        latLngs.add(p4);
+        latLngs.add(p5);
+        latLngs.add(p6);
+        latLngs.add(p7);
+        latLngs.add(p8);
+        latLngs.add(p9);
+
+        polylineOptions.points(latLngs).color(Color.RED).width(7);
+
+        baiduMap.addOverlay(polylineOptions);
+    }
+
+    public LatLng point(double latitude, double longtitude) {
+        return new LatLng(longtitude, latitude);
     }
 
     private void initMyLocation() {
@@ -75,26 +114,21 @@ public class MainActivity extends AppCompatActivity {
         option.setOpenGps(true);
         option.setCoorType("bd09II");
         option.setIsNeedAddress(true);
-        //每隔一秒进行请求
-        option.setScanSpan(1000);
+        //每隔5秒进行请求
+        option.setScanSpan(5000);
         locationClient.setLocOption(option);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -168,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
             baiduMap.setMyLocationData(locationData);
             mLatitude = bdLocation.getLatitude();
             mLongtitude = bdLocation.getLongitude();
+            Log.d(LOCATION_LOG, String.format("经度：%s, 纬度:", mLongtitude, mLatitude));
             if (isFirstLocation) {
                centerToMyLocation();
                 isFirstLocation = false;
