@@ -4,12 +4,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,7 +18,6 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.DotOptions;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
@@ -28,7 +25,6 @@ import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.Overlay;
 import com.baidu.mapapi.map.OverlayOptions;
-import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.yliec.lbs.tracker.TrackerService;
 import com.yliec.lbs.util.L;
@@ -85,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         initView();
 
-        initMyLocation();
+        initLocation();
     }
 
     private void initView() {
@@ -103,37 +99,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnClear.setOnClickListener(this);
     }
 
-
-    private void drawPath(List<LatLng> points) {
-        if (polyline != null) {
-            polyline.remove();
-            polyline = null;
-        }
-        polylineOptions = new PolylineOptions().points(points).color(Color.RED).width(7);
-        polyline = baiduMap.addOverlay(polylineOptions);
-        Log.d("drawPath", "绘制完成");
-    }
-
-    private void drawStart(List<LatLng> points) {
-        double lat = 0.0;
-        double lng = 0.0;
-
-        for (LatLng ll : points) {
-            lat += ll.latitude;
-            lng += ll.longitude;
-        }
-
-        LatLng avePoint = new LatLng(lat / points.size(), lng / points.size());
-        points.add(avePoint);
-        baiduMap.addOverlay(new DotOptions().center(avePoint).color(Color.GREEN).radius(15));
-    }
-
-    private void addPointToPath(LatLng point) {
-        path.add(point);
-    }
-
-
-    private void initMyLocation() {
+    private void initLocation() {
         //开启定位图层
         baiduMap.setMyLocationEnabled(true);
         //定位初始化

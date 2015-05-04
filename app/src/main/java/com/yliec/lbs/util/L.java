@@ -1,6 +1,7 @@
 package com.yliec.lbs.util;
 
 import android.app.Activity;
+import android.app.Service;
 
 import com.yliec.lbs.MyApplication;
 
@@ -10,5 +11,9 @@ import com.yliec.lbs.MyApplication;
 public class L {
     public static MyApplication app(Activity aty) {
         return (MyApplication)aty.getApplication();
+    }
+
+    public static MyApplication app(Service service) {
+        return (MyApplication)service.getApplication();
     }
 }
