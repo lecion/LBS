@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -23,8 +22,6 @@ import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
-import com.baidu.mapapi.map.Overlay;
-import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.yliec.lbs.tracker.TrackerService;
 import com.yliec.lbs.util.L;
@@ -43,9 +40,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private LocationClient locationClient;
 
-    private OverlayOptions polylineOptions;
-    Overlay polyline = null;
-
     /**
      * 定位监听器
      */
@@ -53,17 +47,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private MyLocationConfiguration.LocationMode currentMode = MyLocationConfiguration.LocationMode.NORMAL;
 
-    /**
-     * 是否第一次定位
-     */
-    private volatile boolean isFirstLocation = true;
-
     private double mLatitude;
 
     private double mLongtitude;
 
-    Handler handler = new Handler();
-    private boolean isStopLocClient = false;
     private Dialog dialog;
 
 
@@ -71,8 +58,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //启动定时器检测
-        handler.postDelayed(new CheckGps(), 3000);
         initView();
         initLocation();
     }
@@ -253,16 +238,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
-    private class CheckGps implements Runnable {
-        @Override
-        public void run() {
-            if (!locationClient.isStarted()) {
-                locationClient.start();
-            }
-            if (!isStopLocClient) {
-                handler.postDelayed(this, 3000);
-            }
-        }
-    }
 }

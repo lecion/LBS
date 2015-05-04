@@ -3,6 +3,7 @@ package com.yliec.lbs.tracker;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
@@ -28,6 +29,10 @@ public class TrackerService extends Service {
 
     private int scanSpan = 3000;
 
+    Handler handler = new Handler();
+
+    private boolean isStopLocClient = false;
+
     /**
      * 总路径
      */
@@ -39,6 +44,7 @@ public class TrackerService extends Service {
     private List<LatLng> points_tem;
 
     private BaiduMap baiduMap;
+
     private boolean isFirstLocation = true;
 
     public TrackerService() {
@@ -54,6 +60,8 @@ public class TrackerService extends Service {
         Log.d(TAG, "onCreate");
         super.onCreate();
         initLocation();
+        //启动定时器检测
+        handler.postDelayed(new CheckGps(), 3000);
     }
 
     @Override
@@ -65,6 +73,7 @@ public class TrackerService extends Service {
     @Override
     public void onDestroy() {
         Log.d(TAG, "onDestroy");
+        isStopLocClient = true;
         if (locationClient != null && locationClient.isStarted()) {
             locationClient.stop();
         }
@@ -147,6 +156,18 @@ public class TrackerService extends Service {
         LatLng avePoint = new LatLng(lat / points.size(), lng / points.size());
         points.add(avePoint);
         baiduMap.addOverlay(new DotOptions().center(avePoint).color(Color.GREEN).radius(15));
+    }
+
+    private class CheckGps implements Runnable {
+        @Override
+        public void run() {
+            if (!locationClient.isStarted()) {
+                locationClient.start();
+            }
+            if (!isStopLocClient) {
+                handler.postDelayed(this, 3000);
+            }
+        }
     }
 
 }
