@@ -29,9 +29,6 @@ import com.baidu.mapapi.model.LatLng;
 import com.yliec.lbs.tracker.TrackerService;
 import com.yliec.lbs.util.L;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String LOCATION_LOG = "LocationLog";
@@ -64,8 +61,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private double mLatitude;
 
     private double mLongtitude;
-    private List<LatLng> points_tem;
-    List<LatLng> path = new ArrayList<>();
 
     Handler handler = new Handler();
     private boolean isStopLocClient = false;
@@ -78,9 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         //启动定时器检测
         handler.postDelayed(new CheckGps(), 3000);
-
         initView();
-
         initLocation();
     }
 
@@ -257,28 +250,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .longitude(mLongtitude).build();
             baiduMap.setMyLocationData(locationData);
             centerToMyLocation();
-/**描点
-            if (isFirstLocation) {
-                centerToMyLocation();
-                isFirstLocation = false;
-                Toast.makeText(MainActivity.this, bdLocation.getAddrStr(), Toast.LENGTH_LONG).show();
-            }
-            LatLng point = new LatLng(mLatitude, mLongtitude);
-            if (point.latitude != 0 && point.longitude != 0) {
-//                Log.d(LOCATION_LOG, String.format("经度：%s, 纬度:%s", mLongtitude, mLatitude));
-                addPointToPath(point);
-                if (path.size() == 5) {
-                    drawStart(path);
-                } else if (path.size() > 7) {
-                    points_tem = path.subList(path.size() - 4, path.size());
-                    Log.d("drawPath", String.format("绘制:%s 到 %s 的点", path.size() - 4, path.size())+"  " + points_tem.toString());
-                    drawPath(path);
-                }
-            } else {
-                Toast.makeText(MainActivity.this, "定位失败", Toast.LENGTH_LONG);
-            }
- **/
-
         }
     }
 
@@ -286,9 +257,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private class CheckGps implements Runnable {
         @Override
         public void run() {
-//            if (points_tem != null && points_tem.size() > 2) {
-//                drawPath(points_tem);
-//            }
             if (!locationClient.isStarted()) {
                 locationClient.start();
             }
