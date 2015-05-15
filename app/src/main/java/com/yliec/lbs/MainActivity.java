@@ -23,6 +23,7 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
+import com.yliec.lbs.bean.Track;
 import com.yliec.lbs.tracker.TrackerService;
 import com.yliec.lbs.util.L;
 
@@ -32,18 +33,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private Button btnStart;
 
-    private Button btnClear;
 
     private MapView mapView;
 
     private BaiduMap baiduMap;
 
     private LocationClient locationClient;
-
-    /**
-     * 定位监听器
-     */
-    private MyLocationListener myLocationListener;
 
     private double mLatitude;
 
@@ -70,9 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initView() {
         btnStart = (Button) findViewById(R.id.btn_tracking);
-        btnClear = (Button) findViewById(R.id.btn_clear);
         btnStart.setOnClickListener(this);
-        btnClear.setOnClickListener(this);
         mapView = (MapView) findViewById(R.id.bmapView);
         baiduMap = mapView.getMap();
     }
@@ -93,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true);
         option.setCoorType("bd09ll");
-        option.setIsNeedAddress(true);
+//        option.setIsNeedAddress(true);
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
         //每隔5秒进行请求
         option.setScanSpan(3000);
@@ -182,6 +175,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.btn_tracking:
                 if (!L.app(this).isTracking()) {
+                    baiduMap.setMyLocationConfigeration(new MyLocationConfiguration(MyLocationConfiguration.LocationMode.FOLLOWING, true, null));
                     startTrackerService();
                     L.app(this).setTracking(true);
                 } else {
@@ -190,8 +184,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     L.app(this).setTracking(false);
                 }
                 updateTrackingBtnState();
-                break;
-            case R.id.btn_clear:
                 break;
         }
     }
@@ -225,6 +217,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void startTrackerService() {
+        Track track = new Track();
+
         Intent intent = new Intent(this, TrackerService.class);
         startService(intent);
     }
