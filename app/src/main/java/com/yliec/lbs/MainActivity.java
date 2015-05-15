@@ -45,8 +45,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private MyLocationListener myLocationListener;
 
-    private MyLocationConfiguration.LocationMode currentMode = MyLocationConfiguration.LocationMode.NORMAL;
-
     private double mLatitude;
 
     private double mLongtitude;
@@ -59,31 +57,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
+        //原创专栏
+        //新媒体
+        //BT
+        //识货
+
+        //左边重邮在线
+        //幽幽黄桷兰
+
         initLocation();
     }
 
     private void initView() {
-
-        mapView = (MapView) findViewById(R.id.bmapView);
-        //取消百度地图logo
-        mapView.removeViewAt(1);
-        baiduMap = mapView.getMap();
-        L.app(this).setBaiduMap(baiduMap);
-
         btnStart = (Button) findViewById(R.id.btn_tracking);
         btnClear = (Button) findViewById(R.id.btn_clear);
-
         btnStart.setOnClickListener(this);
         btnClear.setOnClickListener(this);
+        mapView = (MapView) findViewById(R.id.bmapView);
+        baiduMap = mapView.getMap();
     }
 
     private void initLocation() {
+        L.app(this).setBaiduMap(baiduMap);
         //开启定位图层
         baiduMap.setMyLocationEnabled(true);
+        baiduMap.setMyLocationConfigeration(new MyLocationConfiguration(MyLocationConfiguration.LocationMode.NORMAL, true, null));
+        MapStatusUpdate msu = MapStatusUpdateFactory.zoomTo(19);
+        baiduMap.animateMapStatus(msu);
+
         //定位初始化
         locationClient = new LocationClient(this);
-        myLocationListener = new MyLocationListener();
-        locationClient.registerLocationListener(myLocationListener);
+        locationClient.registerLocationListener(new MyLocationListener());
 
         //对locationClient进行一些配置
         LocationClientOption option = new LocationClientOption();
@@ -97,6 +101,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         locationClient.setLocOption(option);
         locationClient.start();
 
+        //取消百度地图logo
+        mapView.removeViewAt(1);
     }
 
     @Override
@@ -132,9 +138,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
-        baiduMap.setMyLocationEnabled(true);
-        if (!locationClient.isStarted()) {
-            locationClient.start();
+        if (baiduMap != null) {
+            baiduMap.setMyLocationEnabled(true);
+            if (!locationClient.isStarted()) {
+                locationClient.start();
+            }
         }
     }
 
@@ -230,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             mLatitude = bdLocation.getLatitude();
             mLongtitude = bdLocation.getLongitude();
-            MyLocationData locationData = new MyLocationData.Builder().accuracy(bdLocation.getRadius())
+            MyLocationData locationData = new MyLocationData.Builder().accuracy(10)
                     .latitude(mLatitude)
                     .longitude(mLongtitude).build();
             baiduMap.setMyLocationData(locationData);
