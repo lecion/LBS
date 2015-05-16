@@ -3,16 +3,22 @@ package com.yliec.lbs.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.litepal.crud.DataSupport;
+
+import java.util.List;
+
 /**
  * Created by Lecion on 5/15/15.
  */
-public class Track implements Parcelable{
-    private long id = -1;
+public class Track extends DataSupport implements Parcelable{
+    private long id;
+    private String carNumber;
     private long beginTime;
     private long endTime;
     private double distance;
     private String beginPlace;
     private String endPlace;
+    private List<Point> pointList;
 
     public Track(long id, long beginTime, long endTime, double distance) {
         this.id = id;
@@ -72,6 +78,22 @@ public class Track implements Parcelable{
         this.endPlace = endPlace;
     }
 
+    public String getCarNumber() {
+        return carNumber;
+    }
+
+    public void setCarNumber(String carNumber) {
+        this.carNumber = carNumber;
+    }
+
+    public List<Point> getPointList() {
+        return pointList;
+    }
+
+    public void setPointList(List<Point> pointList) {
+        this.pointList = pointList;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -106,5 +128,6 @@ public class Track implements Parcelable{
         distance = in.readDouble();
         beginPlace = in.readString();
         endPlace = in.readString();
+
     }
 }
