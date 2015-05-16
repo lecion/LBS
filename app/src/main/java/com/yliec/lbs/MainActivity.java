@@ -7,10 +7,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -23,7 +26,6 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
-import com.yliec.lbs.bean.Track;
 import com.yliec.lbs.tracker.TrackerService;
 import com.yliec.lbs.util.L;
 
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private Button btnStart;
 
+    private EditText etCarNumber;
 
     private MapView mapView;
 
@@ -65,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initView() {
         btnStart = (Button) findViewById(R.id.btn_tracking);
+        etCarNumber = (EditText) findViewById(R.id.et_car_number);
         btnStart.setOnClickListener(this);
         mapView = (MapView) findViewById(R.id.bmapView);
         baiduMap = mapView.getMap();
@@ -174,16 +178,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_tracking:
-                if (!L.app(this).isTracking()) {
-                    baiduMap.setMyLocationConfigeration(new MyLocationConfiguration(MyLocationConfiguration.LocationMode.FOLLOWING, true, null));
-                    startTrackerService();
-                    L.app(this).setTracking(true);
+                if (!TextUtils.isEmpty(etCarNumber.getText().toString())) {
+                    if (!L.app(this).isTracking()) {
+                        baiduMap.setMyLocationConfigeration(new MyLocationConfiguration(MyLocationConfiguration.LocationMode.FOLLOWING, true, null));
+                        startTrackerService();
+                        L.app(this).setTracking(true);
+                    } else {
+                        stopTrackerService();
+                        showFinishTrackingInfo();
+                        L.app(this).setTracking(false);
+                    }
+                    updateTrackingBtnState();
                 } else {
-                    stopTrackerService();
-                    showFinishTrackingInfo();
-                    L.app(this).setTracking(false);
+                    Toast.makeText(this, "请输入车牌号!", Toast.LENGTH_LONG).show();
                 }
-                updateTrackingBtnState();
                 break;
         }
     }
@@ -218,6 +226,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void startTrackerService(){
         Intent intent = new Intent(this, TrackerService.class);
+        intent.putExtra("car", etCarNumber.getText().toString());
         startService(intent);
     }
 

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<litepal>
-    <dbname value="tracker"></dbname>
-    <version value="1"></version>
-    <list>
-        <mapping class="com.yliec.lbs.bean.Track"></mapping>
-        <mapping class="com.yliec.lbs.bean.Point"></mapping>
-    </list>
-</litepal>

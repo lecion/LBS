@@ -13,14 +13,22 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BitmapDescriptor;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.DotOptions;
+import com.baidu.mapapi.map.MarkerOptions;
+import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.utils.DistanceUtil;
+import com.yliec.lbs.R;
 import com.yliec.lbs.bean.Point;
 import com.yliec.lbs.bean.Track;
 import com.yliec.lbs.util.L;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class TrackerService extends Service {
@@ -51,6 +59,12 @@ public class TrackerService extends Service {
 
     private boolean isFirstLocation = true;
 
+    private List<LatLng> line;
+
+    private LatLng curPoint;
+
+    private LatLng lastPoint;
+
     public TrackerService() {
     }
 
@@ -64,6 +78,7 @@ public class TrackerService extends Service {
         Log.d(TAG, "onCreate");
         super.onCreate();
         track = new Track();
+        line = new LinkedList<>();
         initLocation();
         //启动定时器检测
         handler.postDelayed(new CheckGps(), 3000);
@@ -72,12 +87,15 @@ public class TrackerService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "onStartCommand");
+        track.setCarNumber(intent.getStringExtra("car"));
+        track.setBeginTime(System.currentTimeMillis());
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onDestroy() {
         Log.d(TAG, "onDestroy");
+        addEndPoint(curPoint);
         saveTrack();
         isStopLocClient = true;
         if (locationClient != null && locationClient.isStarted()) {
@@ -113,29 +131,40 @@ public class TrackerService extends Service {
             if (bdLocation == null) {
                 return;
             }
+
+            double latitude = bdLocation.getLatitude();
+            double longitude = bdLocation.getLongitude();
+            curPoint = new LatLng(latitude, longitude);
+
             if (baiduMap == null) {
                 baiduMap = L.app(TrackerService.this).getBaiduMap();
             }
-            double latitude = bdLocation.getLatitude();
-            double longitude = bdLocation.getLongitude();
-
-            if (isFirstLocation) {
-                isFirstLocation = false;
-            }
-            LatLng latLng = new LatLng(latitude, longitude);
 
 
-            if (latLng.latitude != 0 && latLng.longitude != 0) {
-                //                Log.d(LOCATION_LOG, String.format("经度：%s, 纬度:%s", mLongtitude, mLatitude));
-                addPointToTrack(latitude, longitude);
-                addPointToPath(latLng);
-                if (path.size() == 5) {
-                    drawStart(path);
-                } else if (path.size() > 7) {
-                    points_tem = path.subList(path.size() - 4, path.size());
-                    Log.d("drawPath", String.format("绘制:%s 到 %s 的点", path.size() - 4, path.size()) + "  " + points_tem.toString());
-                    drawPath(path);
+            if (curPoint.latitude != 0 && curPoint.longitude != 0) {
+                if (!isFirstLocation) {
+                    drawLine();
+                    MyLocationData locData = new MyLocationData.Builder().
+                            accuracy(bdLocation.getRadius())
+                            .direction(bdLocation.getDirection())
+                            .latitude(latitude)
+                            .longitude(longitude).build();
+                    baiduMap.setMyLocationData(locData);
+                } else {
+                    isFirstLocation = false;
+                    addStartPoint(curPoint);
                 }
+                lastPoint = curPoint;
+                //                Log.d(LOCATION_LOG, String.format("经度：%s, 纬度:%s", mLongtitude, mLatitude));
+//                addPointToTrack(latitude, longitude);
+//                addPointToPath(curPoint);
+//                if (path.size() == 5) {
+//                    drawStart(path);
+//                } else if (path.size() > 7) {
+//                    points_tem = path.subList(path.size() - 4, path.size());
+//                    Log.d("drawPath", String.format("绘制:%s 到 %s 的点", path.size() - 4, path.size()) + "  " + points_tem.toString());
+//                    drawPath(path);
+//                }
             } else {
                 Toast.makeText(TrackerService.this, "定位失败", Toast.LENGTH_LONG);
             }
@@ -143,16 +172,43 @@ public class TrackerService extends Service {
         }
     }
 
+    private void addStartPoint(LatLng start) {
+        OverlayOptions startOverlay = new MarkerOptions().position(start).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon))
+                .zIndex(9);
+        baiduMap.addOverlay(startOverlay);
+    }
+
+    private void addEndPoint(LatLng end) {
+        OverlayOptions startOverlay = new MarkerOptions().position(end).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon))
+                .zIndex(9);
+        baiduMap.addOverlay(startOverlay);
+    }
+
     private void addPointToTrack(double latitude, double longitude) {
         //存点
         Point point = new Point();
         point.setLatitude(latitude);
         point.setLongtitude(longitude);
+        point.save();
         track.getPointList().add(point);
     }
 
     private void addPointToPath(LatLng point) {
         path.add(point);
+    }
+
+    private void drawLine() {
+        //地点变化之后才绘制线段
+        if (curPoint != lastPoint) {
+            addPointToTrack(curPoint.latitude, curPoint.longitude);
+            line.clear();
+            line.add(curPoint);
+            line.add(lastPoint);
+            Log.d("drawPath", String.format("绘制:%s 和 %s ", lastPoint, curPoint));
+            track.setDistance(track.getDistance()+ DistanceUtil.getDistance(curPoint, lastPoint));
+            PolylineOptions polylineOptions = new PolylineOptions().points(line).color(Color.RED).width(7);
+            baiduMap.addOverlay(polylineOptions);
+        }
     }
 
     private void drawPath(List<LatLng> points) {
@@ -178,6 +234,7 @@ public class TrackerService extends Service {
 
 
     private void saveTrack() {
+        track.setEndTime(System.currentTimeMillis());
         track.save();
     }
 
