@@ -161,11 +161,15 @@ public class TrackerService extends Service {
     private class CheckGps implements Runnable {
         @Override
         public void run() {
-            if (!locationClient.isStarted()) {
-                locationClient.start();
-            }
             if (!isStopLocClient) {
+                if (!locationClient.isStarted()) {
+                    locationClient.start();
+                }
                 handler.postDelayed(this, 3000);
+            } else {
+                if (locationClient.isStarted()) {
+                    locationClient.stop();
+                }
             }
         }
     }
