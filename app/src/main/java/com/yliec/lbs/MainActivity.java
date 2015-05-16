@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private Button btnStart;
 
+    private Button btnRecord;
+
     private EditText etCarNumber;
 
     private MapView mapView;
@@ -67,9 +69,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initView() {
+        btnRecord = (Button) findViewById(R.id.btn_records);
         btnStart = (Button) findViewById(R.id.btn_tracking);
         etCarNumber = (EditText) findViewById(R.id.et_car_number);
         btnStart.setOnClickListener(this);
+        btnRecord.setOnClickListener(this);
         mapView = (MapView) findViewById(R.id.bmapView);
         baiduMap = mapView.getMap();
     }
@@ -193,6 +197,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Toast.makeText(this, "请输入车牌号!", Toast.LENGTH_LONG).show();
                 }
                 break;
+
         }
     }
 
