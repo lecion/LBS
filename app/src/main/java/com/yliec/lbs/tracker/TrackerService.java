@@ -16,6 +16,7 @@ import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.DotOptions;
 import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.yliec.lbs.bean.Track;
 import com.yliec.lbs.util.L;
 
 import java.util.ArrayList;
@@ -32,6 +33,8 @@ public class TrackerService extends Service {
     Handler handler = new Handler();
 
     private boolean isStopLocClient = false;
+
+    private Track track;
 
     /**
      * 总路径
@@ -59,6 +62,7 @@ public class TrackerService extends Service {
     public void onCreate() {
         Log.d(TAG, "onCreate");
         super.onCreate();
+        track = new Track();
         initLocation();
         //启动定时器检测
         handler.postDelayed(new CheckGps(), 3000);
@@ -73,12 +77,14 @@ public class TrackerService extends Service {
     @Override
     public void onDestroy() {
         Log.d(TAG, "onDestroy");
+
         isStopLocClient = true;
         if (locationClient != null && locationClient.isStarted()) {
             locationClient.stop();
         }
         super.onDestroy();
     }
+
 
     private void initLocation() {
         path = new ArrayList<>();
@@ -158,6 +164,12 @@ public class TrackerService extends Service {
         baiduMap.addOverlay(new DotOptions().center(avePoint).color(Color.GREEN).radius(15));
     }
 
+
+
+    private void saveTrack() {
+        track.save();
+    }
+
     private class CheckGps implements Runnable {
         @Override
         public void run() {
@@ -173,5 +185,6 @@ public class TrackerService extends Service {
             }
         }
     }
+
 
 }

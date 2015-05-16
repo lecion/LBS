@@ -5,10 +5,12 @@ import android.app.Application;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 
+import org.litepal.LitePalApplication;
+
 /**
  * Created by Lecion on 4/22/15.
  */
-public class MyApplication extends Application{
+public class MyApplication extends LitePalApplication{
 
     private BaiduMap baiduMap;
 

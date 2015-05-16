@@ -216,9 +216,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnStart.setText(L.app(this).isTracking() ? getString(R.string.stop_tracking) : getString(R.string.start_tracking));
     }
 
-    private void startTrackerService() {
-        Track track = new Track();
-
+    private void startTrackerService(){
         Intent intent = new Intent(this, TrackerService.class);
         startService(intent);
     }

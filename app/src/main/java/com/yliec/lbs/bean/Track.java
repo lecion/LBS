@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import org.litepal.crud.DataSupport;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ public class Track extends DataSupport implements Parcelable{
     private double distance;
     private String beginPlace;
     private String endPlace;
-    private List<Point> pointList;
+    private List<Point> pointList = new ArrayList<Point>();
 
     public Track(long id, long beginTime, long endTime, double distance) {
         this.id = id;
