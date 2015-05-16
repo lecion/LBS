@@ -40,4 +40,13 @@
             android:text="@string/start_tracking" />
     </LinearLayout>
 
+    <Button
+        android:id="@+id/btn_records"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="所有记录"
+        />
+
 </RelativeLayout>

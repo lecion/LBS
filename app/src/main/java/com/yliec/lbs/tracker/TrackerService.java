@@ -81,7 +81,7 @@ public class TrackerService extends Service {
         line = new LinkedList<>();
         initLocation();
         //启动定时器检测
-        handler.postDelayed(new CheckGps(), 3000);
+        handler.postDelayed(new CheckGps(), 10000);
     }
 
     @Override

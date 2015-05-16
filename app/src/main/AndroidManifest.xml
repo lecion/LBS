@@ -75,6 +75,11 @@
             android:enabled="true"
             android:exported="true" >
         </service>
+
+        <activity
+            android:name=".RecordActivity"
+            android:label="@string/title_activity_record" >
+        </activity>
     </application>
 
 </manifest>
