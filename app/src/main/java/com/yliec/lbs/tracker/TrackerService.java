@@ -16,6 +16,7 @@ import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.DotOptions;
 import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.yliec.lbs.bean.Point;
 import com.yliec.lbs.bean.Track;
 import com.yliec.lbs.util.L;
 
@@ -77,7 +78,7 @@ public class TrackerService extends Service {
     @Override
     public void onDestroy() {
         Log.d(TAG, "onDestroy");
-
+        saveTrack();
         isStopLocClient = true;
         if (locationClient != null && locationClient.isStarted()) {
             locationClient.stop();
@@ -121,10 +122,13 @@ public class TrackerService extends Service {
             if (isFirstLocation) {
                 isFirstLocation = false;
             }
-            LatLng point = new LatLng(latitude, longitude);
-            if (point.latitude != 0 && point.longitude != 0) {
+            LatLng latLng = new LatLng(latitude, longitude);
+
+
+            if (latLng.latitude != 0 && latLng.longitude != 0) {
                 //                Log.d(LOCATION_LOG, String.format("经度：%s, 纬度:%s", mLongtitude, mLatitude));
-                addPointToPath(point);
+                addPointToTrack(latitude, longitude);
+                addPointToPath(latLng);
                 if (path.size() == 5) {
                     drawStart(path);
                 } else if (path.size() > 7) {
@@ -136,8 +140,15 @@ public class TrackerService extends Service {
                 Toast.makeText(TrackerService.this, "定位失败", Toast.LENGTH_LONG);
             }
 
-
         }
+    }
+
+    private void addPointToTrack(double latitude, double longitude) {
+        //存点
+        Point point = new Point();
+        point.setLatitude(latitude);
+        point.setLongtitude(longitude);
+        track.getPointList().add(point);
     }
 
     private void addPointToPath(LatLng point) {
