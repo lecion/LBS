@@ -98,7 +98,6 @@ public class RecordActivity extends ActionBarActivity {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(RecordActivity.this, MainActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
                     i.putExtra("track", track);
                     startActivity(i);
                 }

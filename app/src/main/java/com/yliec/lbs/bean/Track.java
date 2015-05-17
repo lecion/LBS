@@ -3,9 +3,12 @@ package com.yliec.lbs.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.baidu.mapapi.model.LatLng;
+
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -93,6 +96,15 @@ public class Track extends DataSupport implements Parcelable{
 
     public void setPointList(List<Point> pointList) {
         this.pointList = pointList;
+    }
+
+    public LinkedList<LatLng> getPoints() {
+        List<Point> points =  DataSupport.where("track_id = ?", String.valueOf(id)).find(Point.class);
+        LinkedList<LatLng> latLngs = new LinkedList<>();
+        for (Point p : points) {
+            latLngs.add(new LatLng(p.getLatitude(), p.getLongtitude()));
+        }
+        return latLngs;
     }
 
     @Override

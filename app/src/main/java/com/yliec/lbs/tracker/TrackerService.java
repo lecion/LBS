@@ -145,7 +145,7 @@ public class TrackerService extends Service {
                 if (!isFirstLocation) {
                     drawLine();
                     MyLocationData locData = new MyLocationData.Builder().
-                            accuracy(bdLocation.getRadius())
+                            accuracy(10)
                             .direction(bdLocation.getDirection())
                             .latitude(latitude)
                             .longitude(longitude).build();
@@ -175,13 +175,13 @@ public class TrackerService extends Service {
     }
 
     private void addStartPoint(LatLng start) {
-        OverlayOptions startOverlay = new MarkerOptions().position(start).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon))
+        OverlayOptions startOverlay = new MarkerOptions().position(start).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_start))
                 .zIndex(9);
         baiduMap.addOverlay(startOverlay);
     }
 
     private void addEndPoint(LatLng end) {
-        OverlayOptions startOverlay = new MarkerOptions().position(end).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon))
+        OverlayOptions startOverlay = new MarkerOptions().position(end).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_end))
                 .zIndex(9);
         baiduMap.addOverlay(startOverlay);
     }
