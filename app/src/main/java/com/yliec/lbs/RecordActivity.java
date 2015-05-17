@@ -1,8 +1,8 @@
 package com.yliec.lbs;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Base64;
+import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,6 +27,8 @@ public class RecordActivity extends ActionBarActivity {
         trackList = new ArrayList<>();
         lvRecord = (ListView) findViewById(R.id.lv_record);
         lvRecord.setAdapter(new RecordAdapter());
+        trackList = Track.findAll(Track.class);
+        Log.d("RecordActivity", trackList.toArray().toString());
     }
 
     @Override
