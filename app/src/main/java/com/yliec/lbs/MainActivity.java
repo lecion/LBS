@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void centerToMyLocation() {
         LatLng latLng = new LatLng(mLatitude, mLongtitude);
-        MapStatusUpdate msu = MapStatusUpdateFactory.newLatLngZoom(latLng, 20);
+        MapStatusUpdate msu = MapStatusUpdateFactory.newLatLngZoom(latLng, 19);
         baiduMap.animateMapStatus(msu);
     }
 

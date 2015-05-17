@@ -50,6 +50,8 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
 
     private Dialog dialog;
 
+    private boolean isFirst = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,7 +166,7 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void centerToMyLocation() {
         LatLng latLng = new LatLng(mLatitude, mLongtitude);
-        MapStatusUpdate msu = MapStatusUpdateFactory.newLatLngZoom(latLng, 20);
+        MapStatusUpdate msu = MapStatusUpdateFactory.newLatLngZoom(latLng, 19);
         baiduMap.animateMapStatus(msu);
     }
 
@@ -232,7 +234,12 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
                     .latitude(mLatitude)
                     .longitude(mLongtitude).build();
             baiduMap.setMyLocationData(locationData);
-            centerToMyLocation();
+            if (isFirst) {
+                centerToMyLocation();
+            } else {
+                isFirst = false;
+            }
+
         }
     }
 
