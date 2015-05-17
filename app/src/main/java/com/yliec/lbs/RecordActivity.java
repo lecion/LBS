@@ -1,25 +1,34 @@
 package com.yliec.lbs;
 
 import android.annotation.TargetApi;
+import android.app.Dialog;
 import android.app.TaskStackBuilder;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.yliec.lbs.bean.Track;
 import com.yliec.lbs.util.L;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +37,8 @@ import java.util.List;
 public class RecordActivity extends ActionBarActivity {
     private ListView lvRecord;
     private List<Track> trackList;
+    private RecordAdapter recordAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +47,16 @@ public class RecordActivity extends ActionBarActivity {
         trackList = new ArrayList<>();
         trackList = Track.findAll(Track.class);
         lvRecord = (ListView) findViewById(R.id.lv_record);
-        lvRecord.setAdapter(new RecordAdapter());
+        recordAdapter = new RecordAdapter();
+        lvRecord.setAdapter(recordAdapter);
+        lvRecord.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("RecordActivity", recordAdapter.getItem(position).toString());
+                new DeleteDialog(position).show(getSupportFragmentManager(), "delete");
+                return false;
+            }
+        });
         Log.d("RecordActivity", trackList.get(0).getBeginTime()+"");
     }
 
@@ -129,4 +149,41 @@ public class RecordActivity extends ActionBarActivity {
             Button btnPlay;
         }
     }
+
+    public class DeleteDialog extends DialogFragment {
+        private int position;
+        public DeleteDialog(int position) {
+            this.position = position;
+        }
+
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            return new AlertDialog.Builder(RecordActivity.this).setTitle("确认删除该记录？").setNegativeButton("不忍下手", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            }).setPositiveButton("残忍删除", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    doDelete();
+                }
+
+                private void doDelete() {
+                    Track track = (Track) recordAdapter.getItem(position);
+                    if (track != null) {
+                        if (DataSupport.delete(Track.class, track.getId()) > 0) {
+                            trackList.remove(position);
+                            recordAdapter.notifyDataSetChanged();
+                            Toast.makeText(RecordActivity.this, "删除成功", Toast.LENGTH_SHORT);
+                        }
+                    }
+                }
+            }).create();
+        }
+
+
+    }
+
 }
