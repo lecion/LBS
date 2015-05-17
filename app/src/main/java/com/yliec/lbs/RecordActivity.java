@@ -112,7 +112,7 @@ public class RecordActivity extends ActionBarActivity {
             holder.btnPlay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(RecordActivity.this, MainActivity.class);
+                    Intent i = new Intent(RecordActivity.this, ShowActivity.class);
                     i.putExtra("track", track);
                     startActivity(i);
                 }

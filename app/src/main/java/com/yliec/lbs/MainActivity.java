@@ -220,11 +220,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_records:
-                startActivity(new Intent(this, RecordActivity.class));
+                if (L.app(this).isTracking()) {
+                    Toast.makeText(this, "请先停止本次记录！", Toast.LENGTH_LONG).show();
+                } else {
+                    startActivity(new Intent(this, RecordActivity.class));
+                }
                 break;
             case R.id.btn_tracking:
                 if (!TextUtils.isEmpty(etCarNumber.getText().toString())) {
                     if (!L.app(this).isTracking()) {
+                        Toast.makeText(this, "行程记录开始...", Toast.LENGTH_SHORT).show();
                         baiduMap.setMyLocationConfigeration(new MyLocationConfiguration(MyLocationConfiguration.LocationMode.FOLLOWING, true, null));
                         startTrackerService();
                         L.app(this).setTracking(true);
@@ -235,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     updateTrackingBtnState();
                 } else {
-                    Toast.makeText(this, "请输入车牌号!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "请输入车牌号!", Toast.LENGTH_SHORT).show();
                 }
                 break;
 

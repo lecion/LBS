@@ -1,21 +1,18 @@
 package com.yliec.lbs;
 
-import android.app.AlertDialog;
+import android.annotation.TargetApi;
 import android.app.Dialog;
-import android.content.DialogInterface;
+import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -33,7 +30,6 @@ import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.yliec.lbs.bean.Track;
-import com.yliec.lbs.tracker.TrackerService;
 import com.yliec.lbs.util.L;
 
 import java.util.List;
@@ -41,12 +37,6 @@ import java.util.List;
 
 public class ShowActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String LOCATION_LOG = "LocationLog";
-
-    private Button btnStart;
-
-    private Button btnRecord;
-
-    private EditText etCarNumber;
 
     private MapView mapView;
 
@@ -65,6 +55,7 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initView();
         //原创专栏
         //新媒体
@@ -75,9 +66,7 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
         //幽幽黄桷兰
 
         initLocation();
-        Log.d("MainActivity", "onCreate");
         if (getIntent() != null && getIntent().getExtras() != null) {
-            findViewById(R.id.container).setVisibility(View.GONE);
             Track track = getIntent().getParcelableExtra("track");
             drawTrack(track);
         }
@@ -107,11 +96,6 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initView() {
-        btnRecord = (Button) findViewById(R.id.btn_records);
-        btnStart = (Button) findViewById(R.id.btn_tracking);
-        etCarNumber = (EditText) findViewById(R.id.et_car_number);
-        btnStart.setOnClickListener(this);
-        btnRecord.setOnClickListener(this);
         mapView = (MapView) findViewById(R.id.bmapView);
         baiduMap = mapView.getMap();
     }
@@ -150,11 +134,21 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
+        if (id == R.id.home) {
+            if (id == R.id.homeAsUp) {
+                Intent upIntent = NavUtils.getParentActivityIntent(this);
+                if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+                    TaskStackBuilder.create(this).addNextIntentWithParentStack(upIntent).startActivities();
+                } else {
+                    upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    NavUtils.navigateUpTo(this, upIntent);
+                }
+            }
             return true;
         }
 
@@ -219,62 +213,10 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_records:
-                startActivity(new Intent(this, RecordActivity.class));
-                break;
-            case R.id.btn_tracking:
-                if (!TextUtils.isEmpty(etCarNumber.getText().toString())) {
-                    if (!L.app(this).isTracking()) {
-                        baiduMap.setMyLocationConfigeration(new MyLocationConfiguration(MyLocationConfiguration.LocationMode.FOLLOWING, true, null));
-                        startTrackerService();
-                        L.app(this).setTracking(true);
-                    } else {
-                        stopTrackerService();
-                        showFinishTrackingInfo();
-                        L.app(this).setTracking(false);
-                    }
-                    updateTrackingBtnState();
-                } else {
-                    Toast.makeText(this, "请输入车牌号!", Toast.LENGTH_LONG).show();
-                }
-                break;
 
         }
     }
 
-    private void showFinishTrackingInfo() {
-        if (dialog == null) {
-            dialog = new AlertDialog.Builder(this).setTitle("记录完成").setMessage("是否查看本次路径？")
-                    .setNegativeButton("不要看", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                        }
-                    })
-                    .setPositiveButton("现在看", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                        }
-                    })
-                    .create();
-        }
-        dialog.show();
-    }
-
-    private void stopTrackerService() {
-        stopService(new Intent(this, TrackerService.class));
-    }
-
-    private void updateTrackingBtnState() {
-        btnStart.setText(L.app(this).isTracking() ? getString(R.string.stop_tracking) : getString(R.string.start_tracking));
-    }
-
-    private void startTrackerService(){
-        Intent intent = new Intent(this, TrackerService.class);
-        intent.putExtra("car", etCarNumber.getText().toString());
-        startService(intent);
-    }
 
     public class MyLocationListener implements BDLocationListener {
 

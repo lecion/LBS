@@ -10,44 +10,4 @@
         android:layout_height="match_parent"
         android:clickable="true" />
 
-    <LinearLayout
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#F0F0F0"
-        android:padding="16dp"
-        >
-
-        <EditText
-            android:id="@+id/et_car_number"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="2"
-            android:background="#ffffff"
-            android:layout_gravity="center_vertical"
-            android:padding="8dp"
-            android:gravity="center"
-            android:hint="车牌号" />
-
-        <Button
-            android:id="@+id/btn_tracking"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:layout_marginLeft="16dp"
-            android:layout_gravity="center_vertical"
-            android:text="@string/start_tracking" />
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/btn_records"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:text="所有\n记录"
-        android:padding="16dp"
-        />
-
 </RelativeLayout>
