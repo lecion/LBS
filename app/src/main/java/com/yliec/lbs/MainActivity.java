@@ -181,6 +181,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.btn_records:
+                startActivity(new Intent(this, RecordActivity.class));
+                break;
             case R.id.btn_tracking:
                 if (!TextUtils.isEmpty(etCarNumber.getText().toString())) {
                     if (!L.app(this).isTracking()) {

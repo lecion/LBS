@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.IBinder;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -13,7 +14,6 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.DotOptions;
 import com.baidu.mapapi.map.MarkerOptions;
@@ -116,6 +116,7 @@ public class TrackerService extends Service {
         option.setOpenGps(true);
         option.setCoorType("bd09ll");
         option.setIsNeedAddress(true);
+        option.setAddrType("all");
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
         //默认每隔3秒进行请求
         option.setScanSpan(scanSpan);
@@ -135,13 +136,12 @@ public class TrackerService extends Service {
             double latitude = bdLocation.getLatitude();
             double longitude = bdLocation.getLongitude();
             curPoint = new LatLng(latitude, longitude);
-
             if (baiduMap == null) {
                 baiduMap = L.app(TrackerService.this).getBaiduMap();
             }
 
-
             if (curPoint.latitude != 0 && curPoint.longitude != 0) {
+                String place = TextUtils.isEmpty(bdLocation.getAddrStr()) ? "未知" : bdLocation.getAddrStr();
                 if (!isFirstLocation) {
                     drawLine();
                     MyLocationData locData = new MyLocationData.Builder().
@@ -150,9 +150,11 @@ public class TrackerService extends Service {
                             .latitude(latitude)
                             .longitude(longitude).build();
                     baiduMap.setMyLocationData(locData);
+                    track.setEndPlace(place);
                 } else {
                     isFirstLocation = false;
                     addStartPoint(curPoint);
+                    track.setBeginPlace(place);
                 }
                 lastPoint = curPoint;
                 //                Log.d(LOCATION_LOG, String.format("经度：%s, 纬度:%s", mLongtitude, mLatitude));
