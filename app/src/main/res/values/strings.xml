@@ -4,7 +4,7 @@
     <string name="stop_tracking">停止记录</string>
     <string name="start_tracking">开始记录</string>
     <string name="action_settings">设置</string>
-    <string name="title_activity_record">RecordActivity</string>
+    <string name="title_activity_record">行程记录</string>
 
     <string name="hello_world">Hello world!</string>
 </resources>

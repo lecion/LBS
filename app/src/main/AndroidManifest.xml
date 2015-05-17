@@ -78,8 +78,15 @@
 
         <activity
             android:name=".RecordActivity"
-            android:label="@string/title_activity_record" >
+            android:label="@string/title_activity_record"
+            android:parentActivityName=".MainActivity"
+            >
         </activity>
+        <activity android:name=".ShowActivity"
+            android:label="记录回放"
+            android:parentActivityName=".RecordActivity">
+
+            </activity>
     </application>
 
 </manifest>
