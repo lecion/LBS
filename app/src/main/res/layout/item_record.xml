@@ -1,75 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tv_car_number"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="渝A5T332" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/bg_record_list">
 
-    <View
-        android:id="@+id/top_divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@id/tv_car_number"
-        android:background="#ffbcbdbd" />
+        <TextView
+            android:id="@+id/tv_car_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="渝A5T332"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            />
 
-    <TextView
-        android:id="@+id/tv_start_place"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/top_divider"
-        android:layout_centerVertical="true"
-        android:drawableLeft="@drawable/icon"
-        android:padding="16dp"
-        android:text="五里店" />
+        <View
+            android:id="@+id/top_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/tv_car_number"
+            android:background="#dcdcdc" />
 
-    <TextView
-        android:id="@+id/tv_start_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/tv_start_place"
-        android:layout_alignParentRight="true"
-        android:padding="16dp"
-        android:text="04月07日 07:46" />
+        <com.yliec.lbs.DrawableCenterTextView
+            android:id="@+id/tv_start_place"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/top_divider"
+            android:layout_centerVertical="true"
+            android:drawableLeft="@drawable/ic_start"
+            android:padding="16dp"
+            android:gravity="center_vertical"
+            android:drawablePadding="8dp"
+            android:text="五里店" />
 
-    <TextView
-        android:id="@+id/tv_end_place"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_start_place"
-        android:layout_centerVertical="true"
-        android:drawableLeft="@drawable/icon"
-        android:padding="16dp"
-        android:text="观音桥" />
+        <TextView
+            android:id="@+id/tv_start_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/tv_start_place"
+            android:layout_alignParentRight="true"
+            android:padding="16dp"
+            android:text="04月07日 07:46" />
 
-    <TextView
-        android:id="@+id/tv_end_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/tv_end_place"
-        android:layout_alignParentRight="true"
-        android:padding="16dp"
-        android:text="04月07日 07:46" />
+        <com.yliec.lbs.DrawableCenterTextView
+            android:id="@+id/tv_end_place"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_start_place"
+            android:layout_centerVertical="true"
+            android:drawableLeft="@drawable/ic_end"
+            android:gravity="center_vertical"
+            android:drawablePadding="8dp"
+            android:padding="16dp"
+            android:text="观音桥" />
 
-    <View
-        android:id="@+id/bottom_divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@id/tv_end_place"
-        android:background="#ffbcbdbd" />
+        <TextView
+            android:id="@+id/tv_end_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/tv_end_place"
+            android:layout_alignParentRight="true"
+            android:padding="16dp"
+            android:text="04月07日 07:46" />
 
-    <Button
-        android:id="@+id/btn_play"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/bottom_divider"
-        android:layout_centerHorizontal="true"
-        android:paddingLeft="32dp"
-        android:paddingRight="32dp"
-        android:text="回放" />
-</RelativeLayout>
+        <View
+            android:id="@+id/bottom_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/tv_end_place"
+            android:background="#dcdcdc" />
+
+        <Button
+            android:id="@+id/btn_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bottom_divider"
+            android:layout_centerHorizontal="true"
+            android:paddingLeft="32dp"
+            android:paddingRight="32dp"
+            android:text="回放" />
+    </RelativeLayout>
+</FrameLayout>
