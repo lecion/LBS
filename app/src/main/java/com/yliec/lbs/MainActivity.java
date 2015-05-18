@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +35,7 @@ import com.yliec.lbs.util.L;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String LOCATION_LOG = "LocationLog";
+    public static final String TAG = "MainActivity";
 
     private Button btnStart;
 
@@ -146,24 +148,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
-        if (baiduMap != null) {
-            baiduMap.setMyLocationEnabled(true);
-            if (!locationClient.isStarted()) {
-                locationClient.start();
-            }
-        }
+        Log.d(TAG, "onStart");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mapView.onResume();
+        Log.d(TAG, "onResume");
     }
 
     @Override
     protected void onPause() {
-        super.onPause();
         mapView.onPause();
+        super.onPause();
+        Log.d(TAG, "onPause");
     }
 
     @Override
@@ -173,18 +172,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onStop() {
-        super.onStop();
         //关闭定位
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mapView.onDestroy();
         if (baiduMap != null) {
             baiduMap.setMyLocationEnabled(false);
             locationClient.stop();
         }
+        super.onStop();
+        Log.d(TAG, "onStop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        L.app(this).setBaiduMap(null);
+        locationClient.stop();
+        baiduMap.setMyLocationEnabled(false);
+        mapView.onDestroy();
+        mapView = null;
+        super.onDestroy();
+        Log.d(TAG, "onDestroy");
     }
 
     @Override

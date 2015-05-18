@@ -30,7 +30,6 @@ import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.yliec.lbs.bean.Track;
-import com.yliec.lbs.util.L;
 
 import java.util.List;
 
@@ -103,7 +102,6 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initLocation() {
-        L.app(this).setBaiduMap(baiduMap);
         //开启定位图层
         baiduMap.setMyLocationEnabled(true);
         baiduMap.setMyLocationConfigeration(new MyLocationConfiguration(MyLocationConfiguration.LocationMode.NORMAL, true, null));
@@ -173,12 +171,6 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
-        if (baiduMap != null) {
-            baiduMap.setMyLocationEnabled(true);
-            if (!locationClient.isStarted()) {
-                locationClient.start();
-            }
-        }
     }
 
     @Override
