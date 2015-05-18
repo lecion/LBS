@@ -86,13 +86,13 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
 
     }
     private void addStartPoint(LatLng start) {
-        OverlayOptions startOverlay = new MarkerOptions().position(start).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_start))
+        OverlayOptions startOverlay = new MarkerOptions().position(start).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_st))
                 .zIndex(9);
         baiduMap.addOverlay(startOverlay);
     }
 
     private void addEndPoint(LatLng end) {
-        OverlayOptions startOverlay = new MarkerOptions().position(end).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_end))
+        OverlayOptions startOverlay = new MarkerOptions().position(end).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_en))
                 .zIndex(9);
         baiduMap.addOverlay(startOverlay);
     }
@@ -234,11 +234,10 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
                     .latitude(mLatitude)
                     .longitude(mLongtitude).build();
             baiduMap.setMyLocationData(locationData);
-//            if (isFirst) {
-//                centerToMyLocation();
-//            } else {
-//                isFirst = false;
-//            }
+            if (isFirst) {
+                centerToMyLocation();
+                isFirst = true;
+            }
 
         }
     }

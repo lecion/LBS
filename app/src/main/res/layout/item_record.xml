@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -83,22 +83,18 @@
             android:padding="16dp"
             android:text="04月07日 07:46" />
 
-        <View
-            android:id="@+id/bottom_divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@id/tv_end_place"
-            android:background="#dcdcdc" />
+
 
         <Button
             android:id="@+id/btn_play"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/bottom_divider"
+            android:layout_below="@id/tv_end_place"
             android:layout_centerHorizontal="true"
             android:paddingLeft="32dp"
             android:paddingRight="32dp"
             android:focusable="false"
+            android:background="@drawable/bg_play_btn"
             android:text="回放" />
     </RelativeLayout>
 </FrameLayout>
