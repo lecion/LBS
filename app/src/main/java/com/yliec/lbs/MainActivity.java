@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.InfoWindow;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
@@ -37,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private Button btnRecord;
 
+    Button btnShowStart;
+
     private EditText etCarNumber;
 
     private MapView mapView;
@@ -51,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private Dialog dialog;
 
+    private boolean isFirst = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +80,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnRecord.setOnClickListener(this);
         mapView = (MapView) findViewById(R.id.bmapView);
         baiduMap = mapView.getMap();
+        btnShowStart = new Button(getApplicationContext());
+        btnShowStart.setBackgroundResource(R.drawable.popup);
+        btnShowStart.setTextColor(Color.BLACK);
     }
 
     private void initLocation() {
@@ -93,11 +101,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true);
         option.setCoorType("bd09ll");
-//        option.setIsNeedAddress(true);
+        option.setIsNeedAddress(true);
+        option.setAddrType("all");
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
-        //每隔5秒进行请求
+        //默认每隔3秒进行请求
         option.setScanSpan(3000);
-
         locationClient.setLocOption(option);
         locationClient.start();
 
@@ -262,6 +270,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .latitude(mLatitude)
                     .longitude(mLongtitude).build();
             baiduMap.setMyLocationData(locationData);
+            if (isFirst) {
+                String addr = bdLocation.getAddrStr();
+                btnShowStart.setText(addr);
+                LatLng pt = new LatLng(mLatitude, mLongtitude);
+                InfoWindow infoWindow = new InfoWindow(btnShowStart, pt, -47);
+                baiduMap.showInfoWindow(infoWindow);
+                isFirst = false;
+            }
             centerToMyLocation();
         }
     }

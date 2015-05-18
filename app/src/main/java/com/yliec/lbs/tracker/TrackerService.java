@@ -140,6 +140,8 @@ public class TrackerService extends Service {
                 baiduMap = L.app(TrackerService.this).getBaiduMap();
             }
 
+            Log.d("MyLocationListener", bdLocation.getAddrStr() + "  " + bdLocation.getStreet());
+
             if (curPoint.latitude != 0 && curPoint.longitude != 0) {
                 String place = TextUtils.isEmpty(bdLocation.getAddrStr()) ? "未知" : bdLocation.getAddrStr();
                 if (!isFirstLocation) {
