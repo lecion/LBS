@@ -175,14 +175,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStop() {
         super.onStop();
         //关闭定位
-        baiduMap.setMyLocationEnabled(false);
-        locationClient.stop();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
+        if (baiduMap != null) {
+            baiduMap.setMyLocationEnabled(false);
+            locationClient.stop();
+        }
     }
 
     @Override
@@ -198,20 +200,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_tracking:
                 if (!TextUtils.isEmpty(etCarNumber.getText().toString())) {
                     if (!L.app(this).isTracking()) {
-                        if (locationClient.isStarted()) {
-                            locationClient.stop();
-                        }
+
                         Toast.makeText(this, "行程记录开始...", Toast.LENGTH_SHORT).show();
                         baiduMap.setMyLocationConfigeration(new MyLocationConfiguration(MyLocationConfiguration.LocationMode.FOLLOWING, true, null));
                         startTrackerService();
+//                        if (locationClient.isStarted()) {
+//                            locationClient.stop();
+//                        }
                         L.app(this).setTracking(true);
                     } else {
-                        if (!locationClient.isStarted()) {
-                            locationClient.start();
-                        }
                         stopTrackerService();
                         showFinishTrackingInfo();
                         L.app(this).setTracking(false);
+//                        if (!locationClient.isStarted()) {
+//                            locationClient.start();
+//                        }
                     }
                     updateTrackingBtnState();
                 } else {

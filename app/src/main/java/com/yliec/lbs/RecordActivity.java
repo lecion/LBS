@@ -45,7 +45,9 @@ public class RecordActivity extends ActionBarActivity {
         setContentView(R.layout.activity_record);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         trackList = new ArrayList<>();
-        trackList = Track.order("id desc").find(Track.class);
+        if (Track.order("id desc").find(Track.class) != null) {
+            trackList = Track.order("id desc").find(Track.class);
+        }
         lvRecord = (ListView) findViewById(R.id.lv_record);
         recordAdapter = new RecordAdapter();
         lvRecord.setAdapter(recordAdapter);
@@ -57,7 +59,6 @@ public class RecordActivity extends ActionBarActivity {
                 return false;
             }
         });
-        Log.d("RecordActivity", trackList.get(0).getBeginTime()+"");
     }
 
     @Override
@@ -83,10 +84,6 @@ public class RecordActivity extends ActionBarActivity {
                 upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 NavUtils.navigateUpTo(this, upIntent);
             }
-        }
-
-        if (id == R.id.action_settings) {
-            return true;
         }
 
         return super.onOptionsItemSelected(item);
