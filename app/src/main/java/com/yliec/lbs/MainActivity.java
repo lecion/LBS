@@ -209,17 +209,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Toast.makeText(this, "行程记录开始...", Toast.LENGTH_SHORT).show();
                         baiduMap.setMyLocationConfigeration(new MyLocationConfiguration(MyLocationConfiguration.LocationMode.FOLLOWING, true, null));
                         startTrackerService();
-//                        if (locationClient.isStarted()) {
-//                            locationClient.stop();
-//                        }
+                        if (locationClient.isStarted()) {
+                            locationClient.stop();
+                        }
                         L.app(this).setTracking(true);
                     } else {
                         stopTrackerService();
                         showFinishTrackingInfo();
                         L.app(this).setTracking(false);
-//                        if (!locationClient.isStarted()) {
-//                            locationClient.start();
-//                        }
+                        if (!locationClient.isStarted()) {
+                            locationClient.start();
+                        }
                     }
                     updateTrackingBtnState();
                 } else {
