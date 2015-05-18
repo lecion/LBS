@@ -9,13 +9,16 @@
         android:layout_marginTop="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
+        android:descendantFocusability="blocksDescendants"
         android:background="@drawable/bg_record_list">
 
         <TextView
             android:id="@+id/tv_car_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:paddingLeft="24dp"
             android:text="渝A5T332"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -28,17 +31,23 @@
             android:layout_below="@id/tv_car_number"
             android:background="#dcdcdc" />
 
-        <com.yliec.lbs.DrawableCenterTextView
+        <TextView
             android:id="@+id/tv_start_place"
-            android:layout_width="wrap_content"
+            android:layout_width="230dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/top_divider"
             android:layout_centerVertical="true"
+            android:layout_alignLeft="@id/tv_car_number"
             android:drawableLeft="@drawable/ic_start"
             android:padding="16dp"
             android:gravity="center_vertical"
             android:drawablePadding="8dp"
-            android:text="五里店" />
+            android:text="重庆市南岸区崇文路2号重庆邮电大学"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            />
 
         <TextView
             android:id="@+id/tv_start_time"
@@ -49,16 +58,20 @@
             android:padding="16dp"
             android:text="04月07日 07:46" />
 
-        <com.yliec.lbs.DrawableCenterTextView
+        <TextView
             android:id="@+id/tv_end_place"
-            android:layout_width="wrap_content"
+            android:layout_width="230dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_start_place"
             android:layout_centerVertical="true"
             android:drawableLeft="@drawable/ic_end"
             android:gravity="center_vertical"
             android:drawablePadding="8dp"
+            android:singleLine="true"
+            android:ellipsize="marquee"
             android:padding="16dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:text="观音桥" />
 
         <TextView

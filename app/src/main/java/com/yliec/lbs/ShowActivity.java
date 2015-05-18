@@ -234,11 +234,11 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
                     .latitude(mLatitude)
                     .longitude(mLongtitude).build();
             baiduMap.setMyLocationData(locationData);
-            if (isFirst) {
-                centerToMyLocation();
-            } else {
-                isFirst = false;
-            }
+//            if (isFirst) {
+//                centerToMyLocation();
+//            } else {
+//                isFirst = false;
+//            }
 
         }
     }

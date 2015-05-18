@@ -4,12 +4,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,21 +20,14 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
-import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
-import com.baidu.mapapi.map.OverlayOptions;
-import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.model.LatLng;
-import com.yliec.lbs.bean.Track;
 import com.yliec.lbs.tracker.TrackerService;
 import com.yliec.lbs.util.L;
-
-import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -73,37 +64,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //左边重邮在线
         //幽幽黄桷兰
-
         initLocation();
-        Log.d("MainActivity", "onCreate");
-        if (getIntent() != null && getIntent().getExtras() != null) {
-            findViewById(R.id.container).setVisibility(View.GONE);
-            Track track = getIntent().getParcelableExtra("track");
-            drawTrack(track);
-        }
-    }
-
-    private void drawTrack(Track track) {
-        List<LatLng> pointList= track.getPoints();
-        PolylineOptions polylineOptions = new PolylineOptions();
-        polylineOptions.points(pointList).width(7).color(Color.RED);
-        baiduMap.addOverlay(polylineOptions);
-        LatLng start = pointList.get(0);
-        LatLng end = pointList.get(pointList.size() - 1);
-        addStartPoint(start);
-        addEndPoint(end);
-
-    }
-    private void addStartPoint(LatLng start) {
-        OverlayOptions startOverlay = new MarkerOptions().position(start).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_start))
-                .zIndex(9);
-        baiduMap.addOverlay(startOverlay);
-    }
-
-    private void addEndPoint(LatLng end) {
-        OverlayOptions startOverlay = new MarkerOptions().position(end).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_end))
-                .zIndex(9);
-        baiduMap.addOverlay(startOverlay);
     }
 
     private void initView() {
@@ -229,11 +190,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_tracking:
                 if (!TextUtils.isEmpty(etCarNumber.getText().toString())) {
                     if (!L.app(this).isTracking()) {
+                        if (locationClient.isStarted()) {
+                            locationClient.stop();
+                        }
                         Toast.makeText(this, "行程记录开始...", Toast.LENGTH_SHORT).show();
                         baiduMap.setMyLocationConfigeration(new MyLocationConfiguration(MyLocationConfiguration.LocationMode.FOLLOWING, true, null));
                         startTrackerService();
                         L.app(this).setTracking(true);
                     } else {
+                        if (!locationClient.isStarted()) {
+                            locationClient.start();
+                        }
                         stopTrackerService();
                         showFinishTrackingInfo();
                         L.app(this).setTracking(false);

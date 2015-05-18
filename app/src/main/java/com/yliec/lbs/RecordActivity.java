@@ -45,7 +45,7 @@ public class RecordActivity extends ActionBarActivity {
         setContentView(R.layout.activity_record);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         trackList = new ArrayList<>();
-        trackList = Track.findAll(Track.class);
+        trackList = Track.order("id desc").find(Track.class);
         lvRecord = (ListView) findViewById(R.id.lv_record);
         recordAdapter = new RecordAdapter();
         lvRecord.setAdapter(recordAdapter);
