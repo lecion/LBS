@@ -85,10 +85,10 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
 
     private void drawTrack(Track track) {
         List<LatLng> pointList= track.getPoints();
-        locationAt(pointList.get(0));
         PolylineOptions polylineOptions = new PolylineOptions();
         polylineOptions.points(pointList).width(7).color(Color.RED);
         baiduMap.addOverlay(polylineOptions);
+        locationAt(pointList.get(0));
         LatLng start = pointList.get(0);
         LatLng end = pointList.get(pointList.size() - 1);
         addStartPoint(start);
