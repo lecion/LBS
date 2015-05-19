@@ -16,7 +16,6 @@ import android.view.View;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapStatusUpdate;
@@ -40,7 +39,7 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
 
     private BaiduMap baiduMap;
 
-    private LocationClient locationClient;
+//    private LocationClient locationClient;
 
     private double mLatitude;
 
@@ -215,7 +214,7 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
         super.onStop();
         //关闭定位
         baiduMap.setMyLocationEnabled(false);
-        locationClient.stop();
+//        locationClient.stop();
     }
 
     @Override
