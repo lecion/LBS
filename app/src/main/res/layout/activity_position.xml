@@ -17,6 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="日期"
+            android:textSize="14sp"
             />
         <TextView
             android:id="@+id/tv_date"
@@ -26,6 +27,7 @@
             android:hint="请选择日期"
             android:clickable="true"
             android:gravity="right"
+            android:textSize="14sp"
             />
         </LinearLayout>
 
@@ -47,6 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="时间"
+            android:textSize="14sp"
             />
         <TextView
             android:id="@+id/tv_time"
@@ -56,6 +59,7 @@
             android:hint="请选择时间"
             android:clickable="true"
             android:gravity="right"
+            android:textSize="14sp"
             />
     </LinearLayout>
     <View
@@ -77,6 +81,7 @@
             android:layout_weight="10"
             android:text="秒钟"
             android:layout_marginLeft="12dp"
+            android:textSize="14sp"
             />
         <EditText
             android:id="@+id/tv_second"
@@ -86,12 +91,14 @@
             android:clickable="true"
             android:gravity="right"
             android:numeric="integer"
+            android:textSize="14sp"
             />
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="s"
+            android:textSize="14sp"
             />
     </LinearLayout>
     <Button
