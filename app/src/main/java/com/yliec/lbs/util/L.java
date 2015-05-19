@@ -34,7 +34,7 @@ public class L {
 
     public static String date2Stamp(String dateStr) {
         String time = null;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日H时m分");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日H时m分s秒");
         Date d;
         try {
 

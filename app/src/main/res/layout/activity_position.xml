@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="16dp"
+        android:padding="28dp"
         >
         <TextView
             android:id="@+id/tv_title_date"
@@ -26,7 +26,6 @@
             android:hint="请选择日期"
             android:clickable="true"
             android:gravity="right"
-            android:padding="16dp"
             />
         </LinearLayout>
 
@@ -40,7 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="16dp"
+        android:padding="28dp"
         >
         <TextView
             android:id="@+id/tv_title_time"
@@ -57,7 +56,6 @@
             android:hint="请选择时间"
             android:clickable="true"
             android:gravity="right"
-            android:padding="16dp"
             />
     </LinearLayout>
     <View
@@ -65,6 +63,37 @@
         android:layout_height="1dp"
         android:background="#ffd6d6d6"
         />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        >
+        <TextView
+            android:id="@+id/tv_title_second"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:text="秒钟"
+            android:layout_marginLeft="12dp"
+            />
+        <EditText
+            android:id="@+id/tv_second"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:clickable="true"
+            android:gravity="right"
+            android:numeric="integer"
+            />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="s"
+            />
+    </LinearLayout>
     <Button
         android:id="@+id/btn_query"
         android:layout_width="match_parent"

@@ -34,6 +34,7 @@ public class PositionActivity extends ActionBarActivity implements View.OnClickL
 
     private TextView tvTime;
     private TextView tvDate;
+    private TextView tvSecond;
     private Button btnQuery;
     private DatePicker datePicker;
     private TimePicker timePicker;
@@ -62,6 +63,7 @@ public class PositionActivity extends ActionBarActivity implements View.OnClickL
 
         tvTime = (TextView) findViewById(R.id.tv_time);
         tvDate = (TextView) findViewById(R.id.tv_date);
+        tvSecond = (TextView) findViewById(R.id.tv_second);
         btnQuery = (Button) findViewById(R.id.btn_query);
         tvTime.setOnClickListener(this);
         tvDate.setOnClickListener(this);
@@ -96,10 +98,16 @@ public class PositionActivity extends ActionBarActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_query:
-                if (TextUtils.isEmpty(tvDate.getText()) || TextUtils.isEmpty(tvTime.getText())) {
+                if (TextUtils.isEmpty(tvDate.getText()) || TextUtils.isEmpty(tvTime.getText()) || TextUtils.isEmpty(tvSecond.getText())) {
                     Toast.makeText(this, "不选择完整时间让人家怎么查~", Toast.LENGTH_LONG).show();
                 } else {
-                    String time = String.format("%s年%s月%s日%s时%s分", year, month, day, hour, minute);
+                    int second = Integer.parseInt(tvSecond.getText().toString());
+                    if (second > 60 || second < 0) {
+                        L.t(this, "你家的表的秒针能走出" + second + "秒 o.o?");
+                        return;
+                    }
+                    this.seconds = second;
+                    String time = String.format("%s年%s月%s日%s时%s分%s秒", year, month, day, hour, minute, seconds);
                     Log.d("query", "查询点" + L.date2Stamp(time));
 
                     List<Track> track = Track.where("begintime < ? and endtime > ?", L.date2Stamp(time), L.date2Stamp(time)).find(Track.class);
@@ -121,8 +129,6 @@ public class PositionActivity extends ActionBarActivity implements View.OnClickL
                     } else {
                         L.t(this, "没有找到这个时间的位置哟~");
                     }
-
-//                    List<Point> points = Point.where("timestamp = ?", L.date2Stamp(time)).find(Point.class);
 
                 }
 
