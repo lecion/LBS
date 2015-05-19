@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private Button btnRecord;
 
+    private Button btnPosition;
+
     Button btnShowStart;
 
     private EditText etCarNumber;
@@ -76,10 +78,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initView() {
         btnRecord = (Button) findViewById(R.id.btn_records);
+        btnPosition = (Button) findViewById(R.id.btn_position);
         btnStart = (Button) findViewById(R.id.btn_tracking);
         etCarNumber = (EditText) findViewById(R.id.et_car_number);
         btnStart.setOnClickListener(this);
         btnRecord.setOnClickListener(this);
+        btnPosition.setOnClickListener(this);
         mapView = (MapView) findViewById(R.id.bmapView);
         baiduMap = mapView.getMap();
         btnShowStart = new Button(getApplicationContext());
@@ -202,6 +206,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     startActivity(new Intent(this, RecordActivity.class));
                 }
                 break;
+
+            case R.id.btn_position:
+                if (L.app(this).isTracking()) {
+                    Toast.makeText(this, "请先停止本次记录！", Toast.LENGTH_LONG).show();
+                } else {
+                    startActivity(new Intent(this, PositionActivity.class));
+                }
+                break;
+
             case R.id.btn_tracking:
                 if (!TextUtils.isEmpty(etCarNumber.getText().toString())) {
                     if (!L.app(this).isTracking()) {

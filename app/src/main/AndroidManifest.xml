@@ -87,6 +87,11 @@
             android:parentActivityName=".RecordActivity">
 
             </activity>
+        <activity android:name=".PositionActivity"
+            android:label="位置查询"
+            android:parentActivityName=".MainActivity">
+
+        </activity>
     </application>
 
 </manifest>

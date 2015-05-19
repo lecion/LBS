@@ -50,4 +50,14 @@
         android:padding="16dp"
         />
 
+    <Button
+        android:id="@+id/btn_position"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/btn_records"
+        android:text="位置\n查询"
+        android:padding="16dp"
+        />
+
 </RelativeLayout>
