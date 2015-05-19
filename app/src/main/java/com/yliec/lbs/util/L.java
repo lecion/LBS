@@ -25,7 +25,7 @@ public class L {
 
     public static String stamp2Date(long timeStamp, String pattern) {
         SimpleDateFormat format = new SimpleDateFormat(pattern);
-        return format.format(timeStamp);
+        return format.format(timeStamp * 1000);
     }
 
     public static String stamp2Date(long timeStamp) {
