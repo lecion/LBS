@@ -67,10 +67,24 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
         //幽幽黄桷兰
 
         initLocation();
-        if (getIntent() != null && getIntent().getExtras() != null) {
-            Track track = getIntent().getParcelableExtra("track");
-            drawTrack(track);
+        if (getIntent() != null) {
+            if (getIntent().getParcelableExtra("track") != null) {
+                Track track = getIntent().getParcelableExtra("track");
+                drawTrack(track);
+            }
+            double latitude = getIntent().getDoubleExtra("latitude", -1);
+            double longtitude = getIntent().getDoubleExtra("longtitude", -1);
+            if (latitude != -1 && longtitude != -1) {
+                drawPoint(latitude, longtitude);
+            }
         }
+    }
+
+    private void drawPoint(double latitude, double longtitude) {
+        LatLng latLng = new LatLng(latitude, longtitude);
+        OverlayOptions startOverlay = new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_st))
+                .zIndex(9);
+        baiduMap.addOverlay(startOverlay);
     }
 
     private void drawTrack(Track track) {

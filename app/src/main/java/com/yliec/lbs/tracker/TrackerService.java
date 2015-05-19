@@ -88,7 +88,7 @@ public class TrackerService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "onStartCommand");
         track.setCarNumber(intent.getStringExtra("car"));
-        track.setBeginTime(System.currentTimeMillis());
+        track.setBeginTime(System.currentTimeMillis() / 1000);
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -193,6 +193,7 @@ public class TrackerService extends Service {
         Point point = new Point();
         point.setLatitude(latitude);
         point.setLongtitude(longitude);
+        point.setTimestamp(System.currentTimeMillis() / 1000);
         point.save();
         track.getPointList().add(point);
     }
@@ -238,7 +239,7 @@ public class TrackerService extends Service {
 
 
     private void saveTrack() {
-        track.setEndTime(System.currentTimeMillis());
+        track.setEndTime(System.currentTimeMillis() / 1000);
         track.save();
     }
 

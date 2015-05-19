@@ -9,6 +9,7 @@ public class Point extends DataSupport {
     private long id;
     private double latitude;
     private double longtitude;
+    private long timestamp;
     private Track track;
 
     public long getId() {
@@ -41,5 +42,13 @@ public class Point extends DataSupport {
 
     public void setTrack(Track track) {
         this.track = track;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 }
