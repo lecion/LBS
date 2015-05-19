@@ -136,6 +136,9 @@ public class PositionActivity extends ActionBarActivity implements View.OnClickL
                 break;
 
             case R.id.tv_date:
+                if (datePicker.getParent() != null) {
+                    ((ViewGroup)datePicker.getParent()).removeView(datePicker);
+                }
                 new MaterialDialog.Builder(this)
                         .title("日期")
                         .customView(datePicker, false)
@@ -144,7 +147,9 @@ public class PositionActivity extends ActionBarActivity implements View.OnClickL
                             @Override
                             public void onPositive(MaterialDialog dialog) {
                                 super.onPositive(dialog);
-                                ((ViewGroup)datePicker.getParent()).removeView(datePicker);
+                                if (datePicker.getParent() != null) {
+                                    ((ViewGroup)datePicker.getParent()).removeView(datePicker);
+                                }
                                 year = datePicker.getYear();
                                 month = datePicker.getMonth() + 1;
                                 day = datePicker.getDayOfMonth();
@@ -154,6 +159,9 @@ public class PositionActivity extends ActionBarActivity implements View.OnClickL
                 break;
 
             case R.id.tv_time:
+                if (timePicker.getParent() != null) {
+                    ((ViewGroup)timePicker.getParent()).removeView(timePicker);
+                }
                 new MaterialDialog.Builder(this)
                         .title("日期")
                         .customView(timePicker, false)
@@ -162,7 +170,9 @@ public class PositionActivity extends ActionBarActivity implements View.OnClickL
                             @Override
                             public void onPositive(MaterialDialog dialog) {
                                 super.onPositive(dialog);
-                                ((ViewGroup)timePicker.getParent()).removeView(timePicker);
+                                if (timePicker.getParent() != null) {
+                                    ((ViewGroup)timePicker.getParent()).removeView(timePicker);
+                                }
                                 hour = timePicker.getCurrentHour();
                                 minute = timePicker.getCurrentMinute();
                                 tvTime.setText(hour + ":"+ minute);
