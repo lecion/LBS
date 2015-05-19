@@ -17,7 +17,6 @@ import android.view.View;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapStatusUpdate;
@@ -49,9 +48,6 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
 
     private Dialog dialog;
 
-    private boolean isFirst = true;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,13 +78,15 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
 
     private void drawPoint(double latitude, double longtitude) {
         LatLng latLng = new LatLng(latitude, longtitude);
-        OverlayOptions startOverlay = new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_st))
+        locationAt(latLng);
+        OverlayOptions startOverlay = new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_marka))
                 .zIndex(9);
         baiduMap.addOverlay(startOverlay);
     }
 
     private void drawTrack(Track track) {
         List<LatLng> pointList= track.getPoints();
+        locationAt(pointList.get(0));
         PolylineOptions polylineOptions = new PolylineOptions();
         polylineOptions.points(pointList).width(7).color(Color.RED);
         baiduMap.addOverlay(polylineOptions);
@@ -122,21 +120,21 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
         MapStatusUpdate msu = MapStatusUpdateFactory.zoomTo(19);
         baiduMap.animateMapStatus(msu);
 
-        //定位初始化
-        locationClient = new LocationClient(this);
-        locationClient.registerLocationListener(new MyLocationListener());
-
-        //对locationClient进行一些配置
-        LocationClientOption option = new LocationClientOption();
-        option.setOpenGps(true);
-        option.setCoorType("bd09ll");
-//        option.setIsNeedAddress(true);
-        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
-        //每隔5秒进行请求
-        option.setScanSpan(3000);
-
-        locationClient.setLocOption(option);
-        locationClient.start();
+//        //定位初始化
+//        locationClient = new LocationClient(this);
+//        locationClient.registerLocationListener(new MyLocationListener());
+//
+//        //对locationClient进行一些配置
+//        LocationClientOption option = new LocationClientOption();
+//        option.setOpenGps(true);
+//        option.setCoorType("bd09ll");
+////        option.setIsNeedAddress(true);
+//        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
+//        //每隔5秒进行请求
+//        option.setScanSpan(3000);
+//
+//        locationClient.setLocOption(option);
+//        locationClient.start();
 
         //取消百度地图logo
         mapView.removeViewAt(1);
@@ -178,6 +176,14 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void centerToMyLocation() {
         LatLng latLng = new LatLng(mLatitude, mLongtitude);
+        MapStatusUpdate msu = MapStatusUpdateFactory.newLatLngZoom(latLng, 19);
+        baiduMap.animateMapStatus(msu);
+    }
+
+    /**
+     * 定位到指定位置
+     */
+    private void locationAt(LatLng latLng) {
         MapStatusUpdate msu = MapStatusUpdateFactory.newLatLngZoom(latLng, 19);
         baiduMap.animateMapStatus(msu);
     }
@@ -240,10 +246,6 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
                     .latitude(mLatitude)
                     .longitude(mLongtitude).build();
             baiduMap.setMyLocationData(locationData);
-            if (isFirst) {
-                centerToMyLocation();
-                isFirst = true;
-            }
 
         }
     }
