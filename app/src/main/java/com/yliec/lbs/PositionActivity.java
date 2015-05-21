@@ -13,14 +13,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 import com.yliec.lbs.bean.Track;
 import com.yliec.lbs.util.L;
 
@@ -30,7 +31,7 @@ import java.util.Calendar;
 import java.util.List;
 
 
-public class PositionActivity extends ActionBarActivity implements View.OnClickListener{
+public class PositionActivity extends ActionBarActivity implements View.OnClickListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener{
 
     private TextView tvTime;
     private TextView tvDate;
@@ -38,6 +39,8 @@ public class PositionActivity extends ActionBarActivity implements View.OnClickL
     private Button btnQuery;
     private DatePicker datePicker;
     private TimePicker timePicker;
+    private TimePickerDialog timePickerDialog = null;
+    private DatePickerDialog datePickerDialog = null;
     private int year;
     private int month;
     private int day;
@@ -57,9 +60,14 @@ public class PositionActivity extends ActionBarActivity implements View.OnClickL
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        int minute = c.get(Calendar.MINUTE);
         timePicker = new TimePicker(this);
         datePicker = new DatePicker(this);
         datePicker.init(year, month, day, null);
+
+        timePickerDialog = TimePickerDialog.newInstance(this, hour, minute, true);
+        datePickerDialog = DatePickerDialog.newInstance(this, year, month, day);
 
         tvTime = (TextView) findViewById(R.id.tv_time);
         tvDate = (TextView) findViewById(R.id.tv_date);
@@ -136,49 +144,66 @@ public class PositionActivity extends ActionBarActivity implements View.OnClickL
                 break;
 
             case R.id.tv_date:
-                if (datePicker.getParent() != null) {
-                    ((ViewGroup)datePicker.getParent()).removeView(datePicker);
-                }
-                new MaterialDialog.Builder(this)
-                        .title("日期")
-                        .customView(datePicker, false)
-                        .positiveText("确定")
-                        .callback(new MaterialDialog.ButtonCallback() {
-                            @Override
-                            public void onPositive(MaterialDialog dialog) {
-                                super.onPositive(dialog);
-                                if (datePicker.getParent() != null) {
-                                    ((ViewGroup)datePicker.getParent()).removeView(datePicker);
-                                }
-                                year = datePicker.getYear();
-                                month = datePicker.getMonth() + 1;
-                                day = datePicker.getDayOfMonth();
-                                tvDate.setText(year + "-" + month+ "-" + day);
-                            }
-                        }).show();
+//                if (datePicker.getParent() != null) {
+//                    ((ViewGroup)datePicker.getParent()).removeView(datePicker);
+//                }
+//                new MaterialDialog.Builder(this)
+//                        .title("日期")
+//                        .customView(datePicker, false)
+//                        .positiveText("确定")
+//                        .callback(new MaterialDialog.ButtonCallback() {
+//                            @Override
+//                            public void onPositive(MaterialDialog dialog) {
+//                                super.onPositive(dialog);
+//                                if (datePicker.getParent() != null) {
+//                                    ((ViewGroup)datePicker.getParent()).removeView(datePicker);
+//                                }
+//                                year = datePicker.getYear();
+//                                month = datePicker.getMonth() + 1;
+//                                day = datePicker.getDayOfMonth();
+//                                tvDate.setText(year + "-" + month+ "-" + day);
+//                            }
+//                        }).show();
+                datePickerDialog.show(getFragmentManager(), "DatePickerDialog");
                 break;
 
             case R.id.tv_time:
-                if (timePicker.getParent() != null) {
-                    ((ViewGroup)timePicker.getParent()).removeView(timePicker);
-                }
-                new MaterialDialog.Builder(this)
-                        .title("日期")
-                        .customView(timePicker, false)
-                        .positiveText("确定")
-                        .callback(new MaterialDialog.ButtonCallback() {
-                            @Override
-                            public void onPositive(MaterialDialog dialog) {
-                                super.onPositive(dialog);
-                                if (timePicker.getParent() != null) {
-                                    ((ViewGroup)timePicker.getParent()).removeView(timePicker);
-                                }
-                                hour = timePicker.getCurrentHour();
-                                minute = timePicker.getCurrentMinute();
-                                tvTime.setText(hour + ":"+ minute);
-                            }
-                        }).show();
+//                if (timePicker.getParent() != null) {
+//                    ((ViewGroup)timePicker.getParent()).removeView(timePicker);
+//                }
+//                new MaterialDialog.Builder(this)
+//                        .title("日期")
+//                        .customView(timePicker, false)
+//                        .positiveText("确定")
+//                        .callback(new MaterialDialog.ButtonCallback() {
+//                            @Override
+//                            public void onPositive(MaterialDialog dialog) {
+//                                super.onPositive(dialog);
+//                                if (timePicker.getParent() != null) {
+//                                    ((ViewGroup)timePicker.getParent()).removeView(timePicker);
+//                                }
+//                                hour = timePicker.getCurrentHour();
+//                                minute = timePicker.getCurrentMinute();
+//                                tvTime.setText(hour + ":"+ minute);
+//                            }
+//                        }).show();
+                timePickerDialog.show(getFragmentManager(), "TimePickerDialog");
                 break;
         }
+    }
+
+    @Override
+    public void onTimeSet(RadialPickerLayout radialPickerLayout, int hourOfDay, int minute) {
+        this.hour = hourOfDay;
+        this.minute = minute;
+        tvTime.setText(hourOfDay + ":"+ minute);
+    }
+
+    @Override
+    public void onDateSet(DatePickerDialog datePickerDialog, int year, int monthOfYear, int dayOfMonth) {
+        this.year = year;
+        this.month = monthOfYear + 1;
+        this.day = dayOfMonth;
+        tvDate.setText(year + "-" + month+ "-" + day);
     }
 }
