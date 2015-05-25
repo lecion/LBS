@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.app.TaskStackBuilder;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -46,6 +47,8 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
 
     private double mLongtitude;
 
+    private Track track;
+
     private Dialog dialog;
 
     @Override
@@ -57,7 +60,7 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
         initLocation();
         if (getIntent() != null) {
             if (getIntent().getParcelableExtra("track") != null) {
-                Track track = getIntent().getParcelableExtra("track");
+                track = getIntent().getParcelableExtra("track");
                 drawTrack(track);
             }
             double latitude = getIntent().getDoubleExtra("latitude", -1);
@@ -221,9 +224,18 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_screen_shot:
-                if (L.shotBitmap(this)) {
-                    L.t(this, "保存截图到sdcard/成功");
-                };
+                final String filePath = "sdcard/" + System.currentTimeMillis() + ".png";
+
+                baiduMap.snapshot(new BaiduMap.SnapshotReadyCallback() {
+                    @Override
+                    public void onSnapshotReady(Bitmap bitmap) {
+                        if (L.savePic(bitmap, filePath)) {
+                            L.t(ShowActivity.this, "保存截图到：" + filePath);
+                        } else {
+                            L.t(ShowActivity.this, "截图失败，请重试");
+                        }
+                    }
+                });
                 break;
         }
     }

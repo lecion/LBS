@@ -79,7 +79,7 @@ public class L {
         return bitmap;
     }
 
-    private static boolean savePic(Bitmap bitmap, String fileName) {
+    public static boolean savePic(Bitmap bitmap, String fileName) {
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(fileName);
