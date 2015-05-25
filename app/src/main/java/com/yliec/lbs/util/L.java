@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.Log;
 import android.view.View;
@@ -70,8 +71,10 @@ public class L {
         view.getWindowVisibleDisplayFrame(frame);
         int statusHeight  = frame.top;
         Log.d("takeScreenShot", "状态栏高度:" + statusHeight);
-        int width = aty.getWindowManager().getDefaultDisplay().getWidth();
-        int height = aty.getWindowManager().getDefaultDisplay().getHeight();
+        Point point = new Point();
+        aty.getWindowManager().getDefaultDisplay().getSize(point);
+        int width = point.x;
+        int height = point.y;
         bitmap = Bitmap.createBitmap(bitmap, 0, statusHeight, width, height - statusHeight);
         return bitmap;
     }
