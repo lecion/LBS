@@ -15,8 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapStatusUpdate;
@@ -24,7 +22,6 @@ import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
-import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.model.LatLng;
@@ -115,24 +112,6 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
         baiduMap.setMyLocationConfigeration(new MyLocationConfiguration(MyLocationConfiguration.LocationMode.NORMAL, true, null));
         MapStatusUpdate msu = MapStatusUpdateFactory.zoomTo(19);
         baiduMap.animateMapStatus(msu);
-
-//        //定位初始化
-//        locationClient = new LocationClient(this);
-//        locationClient.registerLocationListener(new MyLocationListener());
-//
-//        //对locationClient进行一些配置
-//        LocationClientOption option = new LocationClientOption();
-//        option.setOpenGps(true);
-//        option.setCoorType("bd09ll");
-////        option.setIsNeedAddress(true);
-//        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
-//        //每隔5秒进行请求
-//        option.setScanSpan(3000);
-//
-//        locationClient.setLocOption(option);
-//        locationClient.start();
-
-        //取消百度地图logo
         mapView.removeViewAt(1);
     }
 
@@ -237,25 +216,6 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 });
                 break;
-        }
-    }
-
-
-    public class MyLocationListener implements BDLocationListener {
-
-        @Override
-        public void onReceiveLocation(BDLocation bdLocation) {
-            if (bdLocation == null || mapView == null) {
-                return;
-            }
-            mLatitude = bdLocation.getLatitude();
-            mLongtitude = bdLocation.getLongitude();
-            MyLocationData locationData = new MyLocationData.Builder().accuracy(10)
-                    .direction(bdLocation.getDirection())
-                    .latitude(mLatitude)
-                    .longitude(mLongtitude).build();
-            baiduMap.setMyLocationData(locationData);
-
         }
     }
 
