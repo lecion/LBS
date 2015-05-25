@@ -3,10 +3,17 @@ package com.yliec.lbs.util;
 import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Rect;
+import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.yliec.lbs.MyApplication;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -51,5 +58,45 @@ public class L {
 
     public static void t(Context context, String str) {
         Toast.makeText(context, str, Toast.LENGTH_LONG).show();
+    }
+
+    public static Bitmap takeScreenShot(Activity aty) {
+        Bitmap bitmap = null;
+        View view = aty.getWindow().getDecorView();
+        view.setDrawingCacheEnabled(true);
+        view.buildDrawingCache();
+        bitmap = view.getDrawingCache();
+        Rect frame = new Rect();
+        view.getWindowVisibleDisplayFrame(frame);
+        int statusHeight  = frame.top;
+        Log.d("takeScreenShot", "状态栏高度:" + statusHeight);
+        int width = aty.getWindowManager().getDefaultDisplay().getWidth();
+        int height = aty.getWindowManager().getDefaultDisplay().getHeight();
+        bitmap = Bitmap.createBitmap(bitmap, 0, statusHeight, width, height - statusHeight);
+        return bitmap;
+    }
+
+    private static boolean savePic(Bitmap bitmap, String fileName) {
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(fileName);
+            if (fos != null) {
+                bitmap.compress(Bitmap.CompressFormat.PNG, 90, fos);
+                fos.flush();
+                fos.close();
+                return true;
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return false;
+    }
+
+    public static boolean shotBitmap(Activity aty) {
+        return savePic(takeScreenShot(aty), "sdcard/" + System.currentTimeMillis() + ".png");
     }
 }
