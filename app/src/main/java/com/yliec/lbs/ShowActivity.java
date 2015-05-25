@@ -28,6 +28,7 @@ import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.yliec.lbs.bean.Track;
+import com.yliec.lbs.util.L;
 
 import java.util.List;
 
@@ -105,6 +106,7 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initLocation() {
+        findViewById(R.id.btn_screen_shot).setOnClickListener(this);
         //开启定位图层
         baiduMap.setMyLocationEnabled(true);
         baiduMap.setMyLocationConfigeration(new MyLocationConfiguration(MyLocationConfiguration.LocationMode.NORMAL, true, null));
@@ -218,7 +220,11 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
+            case R.id.btn_screen_shot:
+                if (L.shotBitmap(this)) {
+                    L.t(this, "保存截图到sdcard/成功");
+                };
+                break;
         }
     }
 
