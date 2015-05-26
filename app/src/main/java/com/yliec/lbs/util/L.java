@@ -3,15 +3,20 @@ package com.yliec.lbs.util;
 import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.yliec.lbs.MyApplication;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -79,10 +84,10 @@ public class L {
         return bitmap;
     }
 
-    public static boolean savePic(Bitmap bitmap, String fileName) {
+    public static boolean savePic(Activity aty, Bitmap bitmap, String fileName) {
         FileOutputStream fos = null;
         try {
-            fos = new FileOutputStream(fileName);
+            fos = aty.openFileOutput(fileName, Context.MODE_PRIVATE);
             if (fos != null) {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 90, fos);
                 fos.flush();
@@ -100,6 +105,33 @@ public class L {
     }
 
     public static boolean shotBitmap(Activity aty) {
-        return savePic(takeScreenShot(aty), "sdcard/" + System.currentTimeMillis() + ".png");
+        return savePic(aty, takeScreenShot(aty), System.currentTimeMillis() + ".png");
+    }
+
+    public static void shareAct(Activity aty, String fileName, String text) {
+        Uri uri = null;
+        try {
+            FileInputStream fis = aty.openFileInput(fileName);
+            Bitmap bitmap = BitmapFactory.decodeStream(fis);
+            uri = Uri.parse(MediaStore.Images.Media.insertImage(aty.getContentResolver(), bitmap, null, null));
+            fis.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+        intent.setType("image/png");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "路径分享");
+        intent.putExtra(Intent.EXTRA_TEXT, text);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        aty.startActivity(Intent.createChooser(intent, aty.getTitle()));
+    }
+
+    public static void share(Activity aty, Bitmap bitmap, String text) {
+        String fileName = System.currentTimeMillis() + ".png";
+        savePic(aty, bitmap, fileName);
+        shareAct(aty, fileName, text);
     }
 }

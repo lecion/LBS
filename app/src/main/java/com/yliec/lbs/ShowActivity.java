@@ -203,16 +203,12 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_screen_shot:
-                final String filePath = "sdcard/" + System.currentTimeMillis() + ".png";
+                final String fileName = System.currentTimeMillis() + ".png";
 
                 baiduMap.snapshot(new BaiduMap.SnapshotReadyCallback() {
                     @Override
                     public void onSnapshotReady(Bitmap bitmap) {
-                        if (L.savePic(bitmap, filePath)) {
-                            L.t(ShowActivity.this, "保存截图到：" + filePath);
-                        } else {
-                            L.t(ShowActivity.this, "截图失败，请重试");
-                        }
+                        L.share(ShowActivity.this, bitmap, "好友分享的路径");
                     }
                 });
                 break;
