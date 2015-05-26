@@ -129,9 +129,20 @@ public class L {
         aty.startActivity(Intent.createChooser(intent, aty.getTitle()));
     }
 
+    public static void shareAct(Activity aty, Bitmap bitmap, String text) {
+        Uri uri = Uri.parse(MediaStore.Images.Media.insertImage(aty.getContentResolver(), bitmap, null, null));
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+        intent.setType("image/png");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "路径分享");
+        intent.putExtra(Intent.EXTRA_TEXT, text);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        aty.startActivity(Intent.createChooser(intent, aty.getTitle()));
+    }
+
     public static void share(Activity aty, Bitmap bitmap, String text) {
         String fileName = System.currentTimeMillis() + ".png";
-        savePic(aty, bitmap, fileName);
-        shareAct(aty, fileName, text);
+//        savePic(aty, bitmap, fileName);
+        shareAct(aty, bitmap, text);
     }
 }

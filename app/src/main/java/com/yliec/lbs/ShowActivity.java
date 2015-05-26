@@ -106,7 +106,7 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initLocation() {
-        findViewById(R.id.btn_screen_shot).setOnClickListener(this);
+//        findViewById(R.id.btn_screen_shot).setOnClickListener(this);
         //开启定位图层
         baiduMap.setMyLocationEnabled(true);
         baiduMap.setMyLocationConfigeration(new MyLocationConfiguration(MyLocationConfiguration.LocationMode.NORMAL, true, null));
@@ -117,7 +117,7 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_show, menu);
         return true;
     }
 
@@ -141,6 +141,15 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
 
         if (id == R.id.menu_my_location) {
             centerToMyLocation();
+        }
+
+        if (id == R.id.menu_share) {
+            baiduMap.snapshot(new BaiduMap.SnapshotReadyCallback() {
+                @Override
+                public void onSnapshotReady(Bitmap bitmap) {
+                    L.share(ShowActivity.this, bitmap, "好友分享的路径");
+                }
+            });
         }
 
         return super.onOptionsItemSelected(item);
@@ -202,16 +211,16 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_screen_shot:
-                final String fileName = System.currentTimeMillis() + ".png";
-
-                baiduMap.snapshot(new BaiduMap.SnapshotReadyCallback() {
-                    @Override
-                    public void onSnapshotReady(Bitmap bitmap) {
-                        L.share(ShowActivity.this, bitmap, "好友分享的路径");
-                    }
-                });
-                break;
+//            case R.id.btn_screen_shot:
+//                final String fileName = System.currentTimeMillis() + ".png";
+//
+//                baiduMap.snapshot(new BaiduMap.SnapshotReadyCallback() {
+//                    @Override
+//                    public void onSnapshotReady(Bitmap bitmap) {
+//                        L.share(ShowActivity.this, bitmap, "好友分享的路径");
+//                    }
+//                });
+//                break;
         }
     }
 
