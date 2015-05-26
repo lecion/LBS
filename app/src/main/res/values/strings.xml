@@ -6,5 +6,7 @@
     <string name="action_settings">设置</string>
     <string name="title_activity_record">行程记录</string>
 
-    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_welcome">Track</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

@@ -166,7 +166,6 @@ public class RecordActivity extends ActionBarActivity {
                 public void onClick(DialogInterface dialog, int which) {
                     doDelete();
                 }
-
                 private void doDelete() {
                     Track track = (Track) recordAdapter.getItem(position);
                     if (track != null) {
