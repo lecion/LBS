@@ -33,7 +33,7 @@
 
         <TextView
             android:id="@+id/tv_start_place"
-            android:layout_width="230dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/top_divider"
             android:layout_centerVertical="true"
@@ -43,10 +43,11 @@
             android:gravity="center_vertical"
             android:drawablePadding="8dp"
             android:text="重庆市南岸区崇文路2号重庆邮电大学"
-            android:singleLine="true"
-            android:ellipsize="marquee"
+            android:ellipsize="end"
             android:focusable="true"
             android:focusableInTouchMode="true"
+            android:singleLine="true"
+            android:maxLines="1"
             />
 
         <TextView
@@ -60,7 +61,7 @@
 
         <TextView
             android:id="@+id/tv_end_place"
-            android:layout_width="230dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_start_place"
             android:layout_centerVertical="true"
@@ -68,7 +69,8 @@
             android:gravity="center_vertical"
             android:drawablePadding="8dp"
             android:singleLine="true"
-            android:ellipsize="marquee"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:padding="16dp"
             android:focusable="true"
             android:focusableInTouchMode="true"
