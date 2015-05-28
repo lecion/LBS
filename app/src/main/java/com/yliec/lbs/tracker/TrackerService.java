@@ -31,6 +31,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * 主要的路径记录服务类，开启服务后间隔一定时间在后台记录每一个位置，并连接成为一条路径
+ */
 public class TrackerService extends Service {
 
     public static final String TAG = "TrackerService";
@@ -121,6 +124,7 @@ public class TrackerService extends Service {
         //默认每隔3秒进行请求
         option.setScanSpan(scanSpan);
         locationClient.setLocOption(option);
+        //启动定位客户端
         locationClient.start();
     }
 
@@ -135,6 +139,7 @@ public class TrackerService extends Service {
 
             double latitude = bdLocation.getLatitude();
             double longitude = bdLocation.getLongitude();
+            //获得当前点
             curPoint = new LatLng(latitude, longitude);
             if (baiduMap == null) {
                 baiduMap = L.app(TrackerService.this).getBaiduMap();
@@ -145,6 +150,7 @@ public class TrackerService extends Service {
             if (curPoint.latitude != 0 && curPoint.longitude != 0) {
                 String place = TextUtils.isEmpty(bdLocation.getAddrStr()) ? "未知" : bdLocation.getAddrStr();
                 if (!isFirstLocation) {
+                    //如果是不是第一次定位，则绘制当前点和上一次点连接的路径
                     drawLine();
                     MyLocationData locData = new MyLocationData.Builder().
                             accuracy(10)
@@ -155,9 +161,11 @@ public class TrackerService extends Service {
                     track.setEndPlace(place);
                 } else {
                     isFirstLocation = false;
+                    //是第一次定位，仅添加当前点作为起始点
                     addStartPoint(curPoint);
                     track.setBeginPlace(place);
                 }
+                //记录本次定位的点
                 lastPoint = curPoint;
                 //                Log.d(LOCATION_LOG, String.format("经度：%s, 纬度:%s", mLongtitude, mLatitude));
 //                addPointToTrack(latitude, longitude);
@@ -176,18 +184,31 @@ public class TrackerService extends Service {
         }
     }
 
+    /**
+     * 添加开始点
+     * @param start
+     */
     private void addStartPoint(LatLng start) {
         OverlayOptions startOverlay = new MarkerOptions().position(start).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_start))
                 .zIndex(9);
         baiduMap.addOverlay(startOverlay);
     }
 
+    /**
+     * 添加结束点
+     * @param end
+     */
     private void addEndPoint(LatLng end) {
         OverlayOptions startOverlay = new MarkerOptions().position(end).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_end))
                 .zIndex(9);
         baiduMap.addOverlay(startOverlay);
     }
 
+    /**
+     * 将点存入路径，并录入数据库
+     * @param latitude
+     * @param longitude
+     */
     private void addPointToTrack(double latitude, double longitude) {
         //存点
         Point point = new Point();
@@ -202,6 +223,9 @@ public class TrackerService extends Service {
         path.add(point);
     }
 
+    /**
+     * 绘制两个点连接的线段
+     */
     private void drawLine() {
         //地点变化之后才绘制线段
         if (curPoint != lastPoint) {
@@ -236,13 +260,17 @@ public class TrackerService extends Service {
         baiduMap.addOverlay(new DotOptions().center(avePoint).color(Color.GREEN).radius(15));
     }
 
-
-
+    /**
+     * 保存本次记录到数据库
+     */
     private void saveTrack() {
         track.setEndTime(System.currentTimeMillis() / 1000);
         track.save();
     }
 
+    /**
+     * 每3秒检查定位客户端，以防服务终止而不能继续定位
+     */
     private class CheckGps implements Runnable {
         @Override
         public void run() {

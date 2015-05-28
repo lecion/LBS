@@ -8,6 +8,7 @@ import com.baidu.mapapi.map.BaiduMap;
 import org.litepal.LitePalApplication;
 
 /**
+ * 全局Application
  * Created by Lecion on 4/22/15.
  */
 public class MyApplication extends LitePalApplication{

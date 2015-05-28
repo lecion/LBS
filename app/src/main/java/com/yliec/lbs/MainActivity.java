@@ -32,7 +32,9 @@ import com.baidu.mapapi.model.LatLng;
 import com.yliec.lbs.tracker.TrackerService;
 import com.yliec.lbs.util.L;
 
-
+/**
+ * 程序运行主界面
+ */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String LOCATION_LOG = "LocationLog";
     public static final String TAG = "MainActivity";
@@ -212,6 +214,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.btn_tracking:
+                //点击开始按钮，若未开始则开始记录，否则停止记录并显示对话框
                 if (!TextUtils.isEmpty(etCarNumber.getText().toString())) {
                     if (!L.app(this).isTracking()) {
 
@@ -239,6 +242,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * 显示记录完成对话框
+     */
     private void showFinishTrackingInfo() {
         if (dialog == null) {
             dialog = new AlertDialog.Builder(this).setTitle("记录完成").setMessage("是否查看本次路径？")
@@ -259,20 +265,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dialog.show();
     }
 
+    /**
+     * 停止路径记录服务
+     */
     private void stopTrackerService() {
         stopService(new Intent(this, TrackerService.class));
     }
 
+    /**
+     * 更新按钮状态
+     */
     private void updateTrackingBtnState() {
         btnStart.setText(L.app(this).isTracking() ? getString(R.string.stop_tracking) : getString(R.string.start_tracking));
     }
 
+    /**
+     * 启动路径记录服务
+     */
     private void startTrackerService(){
         Intent intent = new Intent(this, TrackerService.class);
         intent.putExtra("car", etCarNumber.getText().toString());
         startService(intent);
     }
 
+    /**
+     * 定位监听器
+     */
     public class MyLocationListener implements BDLocationListener {
 
         @Override
@@ -288,6 +306,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .longitude(mLongtitude).build();
             baiduMap.setMyLocationData(locationData);
             if (isFirst) {
+                //如果是第一次进入，则显示当前位置
                 String addr = bdLocation.getAddrStr();
                 btnShowStart.setText(addr);
                 LatLng pt = new LatLng(mLatitude, mLongtitude);
@@ -295,6 +314,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 baiduMap.showInfoWindow(infoWindow);
                 isFirst = false;
             }
+            //定位到我的位置
             centerToMyLocation();
         }
     }

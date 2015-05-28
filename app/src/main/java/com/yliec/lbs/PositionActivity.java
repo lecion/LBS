@@ -30,7 +30,9 @@ import org.litepal.crud.DataSupport;
 import java.util.Calendar;
 import java.util.List;
 
-
+/**
+ * 按时间搜索点的搜索界面
+ */
 public class PositionActivity extends ActionBarActivity implements View.OnClickListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener{
 
     private TextView tvTime;
@@ -55,6 +57,9 @@ public class PositionActivity extends ActionBarActivity implements View.OnClickL
         initView();
     }
 
+    /**
+     * 初始化视图
+     */
     private void initView() {
         Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
@@ -106,6 +111,7 @@ public class PositionActivity extends ActionBarActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_query:
+                //点击查询按钮后进行数据合法性判断
                 if (TextUtils.isEmpty(tvDate.getText()) || TextUtils.isEmpty(tvTime.getText()) || TextUtils.isEmpty(tvSecond.getText())) {
                     Toast.makeText(this, "不选择完整时间让人家怎么查~", Toast.LENGTH_LONG).show();
                 } else {
@@ -117,7 +123,7 @@ public class PositionActivity extends ActionBarActivity implements View.OnClickL
                     this.seconds = second;
                     String time = String.format("%s年%s月%s日%s时%s分%s秒", year, month, day, hour, minute, seconds);
                     Log.d("query", "查询点" + L.date2Stamp(time));
-
+                    //根据时间，从数据库查询点，并判断该点是否合法
                     List<Track> track = Track.where("begintime < ? and endtime > ?", L.date2Stamp(time), L.date2Stamp(time)).find(Track.class);
                     if (track != null && track.size() > 0) {
                         Cursor cursor = DataSupport.findBySQL("select * from point where track_id = ? order by abs(timestamp - ?) asc", String.valueOf(track.get(0).getId()), L.date2Stamp(time));
@@ -130,6 +136,7 @@ public class PositionActivity extends ActionBarActivity implements View.OnClickL
                             Intent i = new Intent(this, ShowActivity.class);
                             i.putExtra("latitude", latitude);
                             i.putExtra("longtitude", longtitude);
+                            //跳转到路径回放界面进行显示
                             startActivity(i);
                         } else {
                             L.t(this, "没有找到这个时间的位置哟~");
@@ -140,53 +147,15 @@ public class PositionActivity extends ActionBarActivity implements View.OnClickL
 
                 }
 
-
                 break;
 
             case R.id.tv_date:
-//                if (datePicker.getParent() != null) {
-//                    ((ViewGroup)datePicker.getParent()).removeView(datePicker);
-//                }
-//                new MaterialDialog.Builder(this)
-//                        .title("日期")
-//                        .customView(datePicker, false)
-//                        .positiveText("确定")
-//                        .callback(new MaterialDialog.ButtonCallback() {
-//                            @Override
-//                            public void onPositive(MaterialDialog dialog) {
-//                                super.onPositive(dialog);
-//                                if (datePicker.getParent() != null) {
-//                                    ((ViewGroup)datePicker.getParent()).removeView(datePicker);
-//                                }
-//                                year = datePicker.getYear();
-//                                month = datePicker.getMonth() + 1;
-//                                day = datePicker.getDayOfMonth();
-//                                tvDate.setText(year + "-" + month+ "-" + day);
-//                            }
-//                        }).show();
+                //显示日期选择对话框
                 datePickerDialog.show(getFragmentManager(), "DatePickerDialog");
                 break;
 
             case R.id.tv_time:
-//                if (timePicker.getParent() != null) {
-//                    ((ViewGroup)timePicker.getParent()).removeView(timePicker);
-//                }
-//                new MaterialDialog.Builder(this)
-//                        .title("日期")
-//                        .customView(timePicker, false)
-//                        .positiveText("确定")
-//                        .callback(new MaterialDialog.ButtonCallback() {
-//                            @Override
-//                            public void onPositive(MaterialDialog dialog) {
-//                                super.onPositive(dialog);
-//                                if (timePicker.getParent() != null) {
-//                                    ((ViewGroup)timePicker.getParent()).removeView(timePicker);
-//                                }
-//                                hour = timePicker.getCurrentHour();
-//                                minute = timePicker.getCurrentMinute();
-//                                tvTime.setText(hour + ":"+ minute);
-//                            }
-//                        }).show();
+                //显示时间选择对话框
                 timePickerDialog.show(getFragmentManager(), "TimePickerDialog");
                 break;
         }

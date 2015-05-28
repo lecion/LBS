@@ -30,7 +30,9 @@ import com.yliec.lbs.util.L;
 
 import java.util.List;
 
-
+/**
+ * 路径回访界面
+ */
 public class ShowActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String LOCATION_LOG = "LocationLog";
 
@@ -56,18 +58,28 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
         initView();
         initLocation();
         if (getIntent() != null) {
+            //判断是否是路径回访
             if (getIntent().getParcelableExtra("track") != null) {
                 track = getIntent().getParcelableExtra("track");
+                //绘制路径
                 drawTrack(track);
-            }
-            double latitude = getIntent().getDoubleExtra("latitude", -1);
-            double longtitude = getIntent().getDoubleExtra("longtitude", -1);
-            if (latitude != -1 && longtitude != -1) {
-                drawPoint(latitude, longtitude);
+            } else {
+                //获取经纬度
+                double latitude = getIntent().getDoubleExtra("latitude", -1);
+                double longtitude = getIntent().getDoubleExtra("longtitude", -1);
+                if (latitude != -1 && longtitude != -1) {
+                    //绘制点
+                    drawPoint(latitude, longtitude);
+                }
             }
         }
     }
 
+    /**
+     * 根据经纬度在地图上绘制点
+     * @param latitude
+     * @param longtitude
+     */
     private void drawPoint(double latitude, double longtitude) {
         LatLng latLng = new LatLng(latitude, longtitude);
         locationAt(latLng);
@@ -76,35 +88,59 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
         baiduMap.addOverlay(startOverlay);
     }
 
+    /**
+     * 根据路径对象在地图上绘制路径
+     * @param track
+     */
     private void drawTrack(Track track) {
+        //得到路径中的Point的list
         List<LatLng> pointList= track.getPoints();
         PolylineOptions polylineOptions = new PolylineOptions();
         polylineOptions.points(pointList).width(7).color(Color.RED);
+        //根据得到的list调用百度地图api绘制路径
         baiduMap.addOverlay(polylineOptions);
+        //地图定位到起点显示
         locationAt(pointList.get(0));
         LatLng start = pointList.get(0);
         LatLng end = pointList.get(pointList.size() - 1);
+        //添加起点
         addStartPoint(start);
+        //添加结束点
         addEndPoint(end);
 
     }
+
+    /**
+     * 添加起点图标
+     * @param start
+     */
     private void addStartPoint(LatLng start) {
         OverlayOptions startOverlay = new MarkerOptions().position(start).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_st))
                 .zIndex(9);
         baiduMap.addOverlay(startOverlay);
     }
 
+    /**
+     * 添加结束点图标
+     * @param end
+     */
     private void addEndPoint(LatLng end) {
         OverlayOptions startOverlay = new MarkerOptions().position(end).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_en))
                 .zIndex(9);
         baiduMap.addOverlay(startOverlay);
     }
 
+    /**
+     * 初始化视图
+     */
     private void initView() {
         mapView = (MapView) findViewById(R.id.bmapView);
         baiduMap = mapView.getMap();
     }
 
+    /**
+     * 初始化定位
+     */
     private void initLocation() {
 //        findViewById(R.id.btn_screen_shot).setOnClickListener(this);
         //开启定位图层
@@ -144,6 +180,7 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         if (id == R.id.menu_share) {
+            //截图并分享
             baiduMap.snapshot(new BaiduMap.SnapshotReadyCallback() {
                 @Override
                 public void onSnapshotReady(Bitmap bitmap) {

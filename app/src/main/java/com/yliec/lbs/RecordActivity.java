@@ -33,7 +33,9 @@ import org.litepal.crud.DataSupport;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * 历史记录界面
+ */
 public class RecordActivity extends ActionBarActivity {
     private ListView lvRecord;
     private List<Track> trackList;
@@ -55,6 +57,7 @@ public class RecordActivity extends ActionBarActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("RecordActivity", recordAdapter.getItem(position).toString());
+                //长按弹出删除对话框
                 new DeleteDialog(position).show(getSupportFragmentManager(), "delete");
                 return false;
             }
@@ -63,7 +66,6 @@ public class RecordActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_record, menu);
         return true;
     }
@@ -71,9 +73,6 @@ public class RecordActivity extends ActionBarActivity {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up btnShowStart, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         if (id == R.id.homeAsUp) {
@@ -89,6 +88,9 @@ public class RecordActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * 路径记录适配器
+     */
     class RecordAdapter extends BaseAdapter {
 
         @Override
@@ -147,6 +149,9 @@ public class RecordActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * 删除对话框
+     */
     public class DeleteDialog extends DialogFragment {
         private int position;
         public DeleteDialog(int position) {
@@ -166,6 +171,10 @@ public class RecordActivity extends ActionBarActivity {
                 public void onClick(DialogInterface dialog, int which) {
                     doDelete();
                 }
+
+                /**
+                 * 执行删除
+                 */
                 private void doDelete() {
                     Track track = (Track) recordAdapter.getItem(position);
                     if (track != null) {

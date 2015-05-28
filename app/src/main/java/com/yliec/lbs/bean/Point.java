@@ -3,6 +3,7 @@ package com.yliec.lbs.bean;
 import org.litepal.crud.DataSupport;
 
 /**
+ * 用于表示一个地图上的一个点，由经度纬度确定
  * Created by lecion on 15-5-16.
  */
 public class Point extends DataSupport {

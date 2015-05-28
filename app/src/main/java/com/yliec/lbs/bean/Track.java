@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * 用于表示记录的一条路径，包含了这条路径上的所有点的list集合
  * Created by Lecion on 5/15/15.
  */
 public class Track extends DataSupport implements Parcelable{
