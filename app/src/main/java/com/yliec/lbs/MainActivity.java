@@ -68,13 +68,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
-        //原创专栏
-        //新媒体
-        //BT
-        //识货
-
-        //左边重邮在线
-        //幽幽黄桷兰
         initLocation();
     }
 
