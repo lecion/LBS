@@ -65,7 +65,7 @@ public class ShowActivity extends AppCompatActivity implements View.OnClickListe
                 drawTrack(track);
             } else {
                 //获取经纬度
-                getActionBar().setTitle("位置查询");
+                setTitle("位置查询");
                 double latitude = getIntent().getDoubleExtra("latitude", -1);
                 double longtitude = getIntent().getDoubleExtra("longtitude", -1);
                 if (latitude != -1 && longtitude != -1) {
