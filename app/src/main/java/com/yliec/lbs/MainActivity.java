@@ -209,6 +209,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_tracking:
                 //点击开始按钮，若未开始则开始记录，否则停止记录并显示对话框
                 if (!TextUtils.isEmpty(etCarNumber.getText().toString())) {
+                    if (etCarNumber.getText().toString().length() > 14) {
+                        L.t(this, "输入的车牌号要在14个字之内哟~");
+                        return;
+                    }
                     if (!L.app(this).isTracking()) {
 
                         Toast.makeText(this, "行程记录开始...", Toast.LENGTH_SHORT).show();
